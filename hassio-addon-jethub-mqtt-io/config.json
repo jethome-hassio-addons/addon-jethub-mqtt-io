@@ -1,0 +1,26 @@
+{
+  "name": "JetHome JetHub peripheral exposer",
+  "version": "dev",
+  "slug": "jethub-mqtt-io",
+  "description": "Expose JetHome JetHub peripheral (relays, inputs, etc..)",
+  "uart": true,
+  "url": "https://github.com/jethome-ru/hassio-addon-jethub-mqtt-io",
+  "services": ["mqtt:need"],
+  "arch": ["aarch64"],
+  "panel_icon": "mdi:home-automation",
+  "ports": {},
+  "ports_description": {},
+  "options": {
+    "mqtt": {
+      "base_topic": "jethub"
+    }
+  },
+  "schema": {
+    "mqtt": {
+      "base_topic": "str",
+      "server": "str?",
+      "user": "str?",
+      "password": "str?"
+    }
+  }
+}

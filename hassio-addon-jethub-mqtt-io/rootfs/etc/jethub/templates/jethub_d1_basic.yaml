@@ -1,0 +1,78 @@
+---
+mqtt:
+  host: 127.0.0.1
+  user: XXXXXXXXXXXX
+  password: XXXXXXXXXXXX
+  topic_prefix: XXXXXXXXXXXX
+  ha_discovery:
+    enabled: yes
+
+# GPIO
+gpio_modules:
+  - name: gpio
+    module: gpiod
+    chip: /dev/gpiochip0
+
+digital_inputs:
+  - name: button
+    module: gpio
+    pin: 10
+    poll_interval: 0.1
+    ha_discovery:
+      component: binary_sensor
+      name: JetHub Front Button
+
+  - name: input1
+    module: gpio
+    pin: 46
+    poll_interval: 0.1
+    ha_discovery:
+      component: binary_sensor
+      name: JetHub Input 1
+  - name: input2
+    module: gpio
+    pin: 45
+    poll_interval: 0.1
+    ha_discovery:
+      component: binary_sensor
+      name: JetHub Input 2
+  - name: input3
+    module: gpio
+    pin: 44
+    poll_interval: 0.1
+    ha_discovery:
+      component: binary_sensor
+      name: JetHub Input 3
+  - name: input4
+    module: gpio
+    pin: 43
+    poll_interval: 0.1
+    ha_discovery:
+      component: binary_sensor
+      name: JetHub Input 4
+
+digital_outputs:
+  - name: output1
+    module: gpio
+    pin: 30
+    initial: low
+    publish_initial: true
+    ha_discovery:
+      component: switch
+      name: JetHub Relay 1
+  - name: output2
+    module: gpio
+    pin: 29
+    initial: low
+    publish_initial: true
+    ha_discovery:
+      component: switch
+      name: JetHub Relay 2
+  - name: output3
+    module: gpio
+    pin: 28
+    initial: low
+    publish_initial: true
+    ha_discovery:
+      component: switch
+      name: JetHub Relay 3

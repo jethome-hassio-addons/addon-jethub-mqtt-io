@@ -1,0 +1,5 @@
+{
+  "build_from": {
+    "aarch64": "ghcr.io/hassio-addons/base-python/aarch64:7.1.1"
+  }
+}
