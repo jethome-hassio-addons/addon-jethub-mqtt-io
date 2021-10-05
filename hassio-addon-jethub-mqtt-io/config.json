@@ -17,11 +17,13 @@
     "/dev/gpiochip3"
   ],
   "options": {
+    "jethub_model": "auto",
     "mqtt": {
       "base_topic": "jethub-mqtt-io"
     }
   },
   "schema": {
+    "jethub_model": "str",
     "mqtt": {
       "base_topic": "str",
       "server": "str?",
