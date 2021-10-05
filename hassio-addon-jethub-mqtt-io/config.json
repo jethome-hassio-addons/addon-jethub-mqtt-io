@@ -1,5 +1,5 @@
 {
-  "name": "JetHome JetHub peripheral exposer",
+  "name": "JetHome JetHub mqtt-io peripheral exposer",
   "version": "dev",
   "slug": "jethub-mqtt-io",
   "description": "Expose JetHome JetHub peripheral (relays, inputs, etc..)",
@@ -15,6 +15,9 @@
       "base_topic": "jethub"
     }
   },
+  "devices": [
+    "/dev/gpiochip0"
+  ],
   "schema": {
     "mqtt": {
       "base_topic": "str",
