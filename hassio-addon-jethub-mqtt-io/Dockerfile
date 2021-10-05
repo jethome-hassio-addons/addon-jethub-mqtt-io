@@ -42,8 +42,8 @@ RUN python3 -m venv venv \
 #
 FROM base
 
-# Install needed packages
-RUN pip install yq
+# Install global packages
+RUN pip install --no-cache-dir yq==2.12.2
 
 WORKDIR /home/mqtt_io
 
@@ -52,7 +52,8 @@ COPY --from=requirements /home/mqtt_io/venv ./venv
 COPY --from=requirements /home/mqtt_io/requirements.txt ./
 COPY --from=requirements /usr/src/mqtt_io/mqtt_io mqtt_io
 
-RUN venv/bin/pip install --no-cache-dir -r requirements.txt
+RUN venv/bin/pip install --no-cache-dir -r requirements.txt && \
+    venv/bin/pip install --no-cache-dir gpiod==1.5.0
 
 # Copy root filesystem
 COPY rootfs /
