@@ -5,6 +5,10 @@
 Expose [JetHub](http://jethome.ru) resources (relays,inputs,etc..) to
 Home Assistant via [mqtt-io](https://github.com/flyte/mqtt-io)
 
+## Supported devices:
+
+- [JetHome JetHub D1](http://jethome.ru/jethub-d1) (Basic version with 3 relays, 4 inputs and 1-wire).
+
 ## Installation
 
 Add the repository URL under **Supervisor → Add-on store → ⋮ → Manage add-on repositories**:
