@@ -11,7 +11,10 @@
   "ports": {},
   "ports_description": {},
   "devices": [
-    "/dev/gpiochip0"
+    "/dev/gpiochip0",
+    "/dev/gpiochip1",
+    "/dev/gpiochip2",
+    "/dev/gpiochip3"
   ],
   "options": {
     "mqtt": {
