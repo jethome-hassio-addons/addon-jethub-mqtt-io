@@ -21,16 +21,19 @@
   "options": {
     "jethub_model": "auto",
     "mqtt": {
-      "base_topic": "jethub-mqtt-io"
+      "client_id": "jethub-mqtt-io",
+      "topic_prefix": "jethub-mqtt-io"
     }
   },
   "schema": {
     "jethub_model": "str",
     "mqtt": {
-      "base_topic": "str",
-      "server": "str?",
+      "host": "str?",
+      "port": "int(1024,65535)?",
       "user": "str?",
-      "password": "str?"
+      "password": "str?",
+      "client_id": "str",
+      "topic_prefix": "str"
     }
   }
 }

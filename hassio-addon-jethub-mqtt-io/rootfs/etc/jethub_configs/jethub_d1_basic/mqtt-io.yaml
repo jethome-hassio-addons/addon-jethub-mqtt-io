@@ -1,9 +1,5 @@
 ---
 mqtt:
-  host: 127.0.0.1
-  user: XXXXXXXXXXXX
-  password: XXXXXXXXXXXX
-  topic_prefix: XXXXXXXXXXXX
   ha_discovery:
     enabled: yes
 
