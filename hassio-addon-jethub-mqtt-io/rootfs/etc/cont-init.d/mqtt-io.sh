@@ -27,16 +27,20 @@ else
     fi
 fi
 
-CONFIG_TEMPLATE=/etc/jethub/templates/jethub_d1_basic.yaml
+JETHUB_MODEL=$(cat /etc/jethub_model)
 
-# TODO: parse efuse for CONFIG_TEMPLATE
+MQTT_IO_CONFIG_TEMPLATE=/etc/jethub_configs/$JETHUB_MODEL/mqtt-io.yaml
 
-bashio::log.info "Adjusting yaml config with add-on quirks ..."
-cat < "$CONFIG_TEMPLATE" \
+if ! test -f "$MQTT_IO_CONFIG_TEMPLATE"; then
+  bashio::exit.nok "mqtt-io template config not found at path '$MQTT_IO_CONFIG_TEMPLATE'"
+fi
+
+bashio::log.info "Preparing mqtt-io config to for model: '$JETHUB_MODEL' from '$MQTT_IO_CONFIG_TEMPLATE'"
+
+cat < "$MQTT_IO_CONFIG_TEMPLATE" \
     | MQTT_USER="$MQTT_USER"  yq '.mqtt.user=env.MQTT_USER' \
     | MQTT_PASSWORD="$MQTT_PASSWORD" yq '.mqtt.password=env.MQTT_PASSWORD' \
     | MQTT_SERVER="$MQTT_SERVER" yq '.mqtt.host=env.MQTT_SERVER' \
     | BASE_TOPIC="$BASE_TOPIC" yq '.mqtt.topic_prefix=env.BASE_TOPIC' \
     > /etc/mqtt-io.conf
-
 
