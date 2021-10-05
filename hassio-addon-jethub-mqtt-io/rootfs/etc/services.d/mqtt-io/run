@@ -2,5 +2,6 @@
 
 bashio::log.info "Starting mqtt-io.."
 
+cd /home/mqtt_io
 /home/mqtt_io/venv/bin/python -m mqtt_io /etc/mqtt-io.conf
 
