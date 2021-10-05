@@ -15,7 +15,7 @@
   ],
   "options": {
     "mqtt": {
-      "base_topic": "jethub"
+      "base_topic": "jethub-mqtt-io"
     }
   },
   "schema": {
