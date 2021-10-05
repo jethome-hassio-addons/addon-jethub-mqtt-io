@@ -203,7 +203,7 @@ jobs:
           event-type: update
           client-payload: >
             {
-              "addon": "hassio-addon-${{ needs.information.outputs.slug }}",
+              "addon": "${{ needs.information.outputs.target }}",
               "name": "${{ needs.information.outputs.name }}",
               "repository": "${{ github.repository }}",
               "version": "${{ needs.information.outputs.version }}"
@@ -229,7 +229,7 @@ jobs:
           event-type: update
           client-payload: >
             {
-              "addon": "hassio-addon-${{ needs.information.outputs.slug }}",
+              "addon": "${{ needs.information.outputs.target }}",
               "name": "${{ needs.information.outputs.name }}",
               "repository": "${{ github.repository }}",
               "version": "${{ github.event.release.tag_name }}"
@@ -253,7 +253,7 @@ jobs:
           event-type: update
           client-payload: >
             {
-              "addon": "hassio-addon-${{ needs.information.outputs.slug }}",
+              "addon": "${{ needs.information.outputs.target }}",
               "name": "${{ needs.information.outputs.name }}",
               "repository": "${{ github.repository }}",
               "version": "${{ github.event.release.tag_name }}"
