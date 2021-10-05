@@ -10,14 +10,14 @@
   "homeassistant": "2021.8.8",
   "ports": {},
   "ports_description": {},
+  "devices": [
+    "/dev/gpiochip0"
+  ],
   "options": {
     "mqtt": {
       "base_topic": "jethub"
     }
   },
-  "devices": [
-    "/dev/gpiochip0"
-  ],
   "schema": {
     "mqtt": {
       "base_topic": "str",
