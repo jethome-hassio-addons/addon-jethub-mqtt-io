@@ -42,9 +42,8 @@ RUN python3 -m venv venv \
 #
 FROM base
 
-# Install global packages
-RUN apk add --no-cache \
-        yq=4.6.3-r2
+# Install needed packages
+RUN pip install yq
 
 WORKDIR /home/mqtt_io
 
