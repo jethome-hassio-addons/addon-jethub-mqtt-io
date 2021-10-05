@@ -7,7 +7,7 @@
   "url": "https://github.com/jethome-ru/hassio-addon-jethub-mqtt-io",
   "services": ["mqtt:need"],
   "arch": ["aarch64"],
-  "panel_icon": "mdi:home-automation",
+  "homeassistant": "2021.8.8",
   "ports": {},
   "ports_description": {},
   "options": {
