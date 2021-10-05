@@ -79,6 +79,3 @@ set_mqtt_io_cfg "mqtt.password" tostring "$MQTT_PASSWORD"
 set_mqtt_io_cfg "mqtt.client_id" tostring "$MQTT_CLIENT_ID"
 set_mqtt_io_cfg "mqtt.topic_prefix" tostring "$TOPIC_PREFIX"
 
-# FIXME: HARDCODE
-cat "$MQTT_IO_CONFIG"
-
