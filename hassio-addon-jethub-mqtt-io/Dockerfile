@@ -30,34 +30,32 @@ RUN apk add --no-cache --virtual .build-dependencies \
         rust=1.52.1-r1 \
         cargo=1.52.1-r1 \
     \
-    && mkdir -p /root/build \
+    && mkdir -p /tmp/build \
     \
-    && git clone --single-branch --branch 2.2.6 https://github.com/flyte/mqtt-io /root/build/mqtt_io \
+    && git clone --single-branch --branch 2.2.6 https://github.com/flyte/mqtt-io /tmp/build/mqtt_io \
     \
-    && python3 -m venv /root/build/venv \
-    && /root/build/venv/bin/pip install --no-cache-dir setuptools-rust==0.12.1 \
-    && /root/build/venv/bin/pip install --no-cache-dir poetry==1.1.10 \
+    && python3 -m venv /tmp/build/venv \
+    && /tmp/build/venv/bin/pip install --no-cache-dir setuptools-rust==0.12.1 \
+    && /tmp/build/venv/bin/pip install --no-cache-dir poetry==1.1.10 \
     \
     && mkdir -p /home/mqtt_io \
-    && cd /root/build/mqtt_io   \
-    && /root/build/venv/bin/python -m poetry export -o /home/mqtt_io/requirements.txt \
+    && cd /tmp/build/mqtt_io   \
+    && /tmp/build/venv/bin/python -m poetry export -o /home/mqtt_io/requirements.txt \
     \
     && cd /home/mqtt_io \
     && python3 -m venv venv \
     && venv/bin/pip install --no-cache-dir -r requirements.txt \
     && venv/bin/pip install --no-cache-dir gpiod==1.5.0 \
-    && cp -r /root/build/mqtt_io/mqtt_io mqtt_io \
+    && cp -r /tmp/build/mqtt_io/mqtt_io mqtt_io \
     \
-    && cd /root \
     && pip install --no-cache-dir yq==2.12.2 \
     \
     && apk del --no-cache --purge .build-dependencies \
     && rm -f -r \
-        /root/build \
+        /tmp/build \
         /root/.cache \
         /root/.cmake \
-        /tmp/* \
-    \
+        /tmp/*
 
 # Copy root filesystem
 COPY rootfs /
