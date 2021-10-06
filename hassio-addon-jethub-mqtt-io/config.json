@@ -14,12 +14,6 @@
   "ports": {},
   "ports_description": {},
   "gpio": true,
-  "devices": [
-    "/dev/gpiochip0",
-    "/dev/gpiochip1",
-    "/dev/gpiochip2",
-    "/dev/gpiochip3"
-  ],
   "apparmor": false,
   "options": {
     "jethub_model": "auto",
