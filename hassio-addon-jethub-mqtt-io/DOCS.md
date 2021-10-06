@@ -7,7 +7,7 @@ Home Assistant via [mqtt-io](https://github.com/flyte/mqtt-io)
 
 **Note**: _Remember to restart the add-on when the configuration is changed._
 
-**Note**: _All GPIOs will **disappear** from **/sys/class/gpio** during addon run_
+**Note**: _All used GPIOs will **disappear** from **/sys/class/gpio** during addon run_
 
 Simple add-on configuration (mqtt will be discovered from the Home Assistant supervisor):
 

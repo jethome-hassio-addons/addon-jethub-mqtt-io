@@ -2,8 +2,14 @@
 
 # Home Assistant Add-on: JetHome JetHub peripheral exposer
 
+## About
+
 Expose [JetHub](http://jethome.ru) resources (relays,inputs,etc..) to
 Home Assistant via [mqtt-io](https://github.com/flyte/mqtt-io)
+
+**Note**: _All used GPIOs will **disappear** from **/sys/class/gpio** during addon run_
+
+[:books: Read the full add-on documentation][docs]
 
 ## Supported devices:
 
@@ -21,4 +27,5 @@ If you find any issues with the add-on, please check the
 [issue tracker](https://github.com/jethome-ru/hassio-addon-jethub-mqtt-io/issues)
 or similar issues before creating one.
 
+[docs]: https://github.com/jethome-ru/hassio-addon-jethub-mqtt-io/blob/main/hassio-addon-jethub-mqtt-io/DOCS.md
 [logo]: hassio-addon-jethub-mqtt-io/logo.png "JetHub mqtt-io"
