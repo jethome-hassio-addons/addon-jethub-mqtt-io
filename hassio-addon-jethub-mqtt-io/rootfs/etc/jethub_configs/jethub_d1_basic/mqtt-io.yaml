@@ -13,6 +13,7 @@ digital_inputs:
   - name: button
     module: gpio
     pin: 10
+    inverted: true
     poll_interval: 0.1
     ha_discovery:
       component: binary_sensor
