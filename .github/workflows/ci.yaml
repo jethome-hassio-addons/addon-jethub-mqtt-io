@@ -144,7 +144,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ github.token }}
 #      - name: 🏗 Set up CodeNotary
 #        run: bash <(curl https://getvcn.codenotary.com -L)
       - name: ℹ️ Compose build flags
