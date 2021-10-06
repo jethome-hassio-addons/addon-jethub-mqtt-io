@@ -20,7 +20,7 @@ do
     sh -c "echo $PIN >/sys/class/gpio/unexport"
     sh -c "echo $PIN >> $UNEXPORTED_PINS_FILE"
   else
-    bashio::log.info "pin '$PIN' was not exported"
+    bashio::log.info "pin '$PIN' was not exported, to unexport needed"
   fi
 done
 
