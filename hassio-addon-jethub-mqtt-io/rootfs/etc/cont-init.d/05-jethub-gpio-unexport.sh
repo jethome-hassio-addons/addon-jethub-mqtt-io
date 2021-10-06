@@ -17,8 +17,8 @@ for PIN in $SYSFS_GPIO_PINS
 do
   if test -d "/sys/class/gpio/gpio$PIN"; then
     bashio::log.info "Unexporting gpio pin '$PIN' from sysfs"
-    echo "$PIN" >/sys/class/gpio/unexport
-    echo "$PIN" >> $UNEXPORTED_PINS_FILE
+    sh -c "echo $PIN >/sys/class/gpio/unexport"
+    sh -c "echo $PIN >> $UNEXPORTED_PINS_FILE"
   else
     bashio::log.info "pin '$PIN' was not exported"
   fi

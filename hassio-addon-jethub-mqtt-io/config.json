@@ -13,10 +13,13 @@
   "homeassistant": "2021.8.8",
   "ports": {},
   "ports_description": {},
-  "privileged": [
-    "SYS_RAWIO"
+  "gpio": true,
+  "devices": [
+    "/dev/gpiochip0",
+    "/dev/gpiochip1",
+    "/dev/gpiochip2",
+    "/dev/gpiochip3"
   ],
-  "full_access": true,
   "apparmor": false,
   "options": {
     "jethub_model": "auto",
