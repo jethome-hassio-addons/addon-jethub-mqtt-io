@@ -16,6 +16,7 @@
   "gpio": true,
   "apparmor": false,
   "options": {
+    "log_level": "info",
     "jethub_model": "auto",
     "mqtt": {
       "client_id": "jethub-mqtt-io",
@@ -23,6 +24,7 @@
     }
   },
   "schema": {
+    "log_level": "list(trace|debug|info|notice|warning|error|fatal)",
     "jethub_model": "str",
     "mqtt": {
       "host": "str?",
