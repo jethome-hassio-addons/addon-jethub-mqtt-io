@@ -2,6 +2,9 @@
 
 bashio::log.info "Starting mqtt-io.."
 
+# we need to use "exec" for correct stopping
+# https://github.com/just-containers/s6-overlay/issues/229
+
 cd /home/mqtt_io
-/home/mqtt_io/venv/bin/python -m mqtt_io /etc/mqtt-io.conf
+exec /home/mqtt_io/venv/bin/python -m mqtt_io /etc/mqtt-io.conf
 
