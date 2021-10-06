@@ -72,8 +72,7 @@ LABEL \
     io.hass.description="${BUILD_DESCRIPTION}" \
     org.opencontainers.image.vendor="JetHome" \
     org.opencontainers.image.authors="Pavel Sokolov <pavel@jethome.ru>" \
-# FIXME: Set license
-#    org.opencontainers.image.licenses="MIT" \
+    org.opencontainers.image.licenses="MIT" \
     org.opencontainers.image.url="ghcr.io/jethome-ru/hassio-addon-jethub-mqtt-io/{arch}" \
     org.opencontainers.image.source="https://github.com/${BUILD_REPOSITORY}" \
     org.opencontainers.image.documentation="https://github.com/${BUILD_REPOSITORY}/blob/master/README.md" \
