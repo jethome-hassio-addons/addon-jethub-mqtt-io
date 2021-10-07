@@ -51,6 +51,22 @@ digital_inputs:
 digital_outputs:
   - name: output1
     module: gpio
+    pin: 26
+    initial: low
+    publish_initial: true
+    ha_discovery:
+      component: switch
+      name: JetHub stat LED red
+  - name: output1
+    module: gpio
+    pin: 27
+    initial: low
+    publish_initial: true
+    ha_discovery:
+      component: switch
+      name: JetHub stat LED green
+  - name: output1
+    module: gpio
     pin: 30
     initial: low
     publish_initial: true
