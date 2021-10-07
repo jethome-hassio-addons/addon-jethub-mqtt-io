@@ -52,6 +52,7 @@ digital_outputs:
   - name: stat_led_red
     module: gpio
     pin: 26
+    inverted: true
     initial: low
     publish_initial: true
     ha_discovery:
@@ -60,6 +61,7 @@ digital_outputs:
   - name: stat_led_green
     module: gpio
     pin: 27
+    inverted: true
     initial: low
     publish_initial: true
     ha_discovery:
