@@ -160,8 +160,8 @@ jobs:
             echo "::error ::Could not determine platform for architecture ${{ matrix.architecture }}"
             exit 1
           fi
-#      - name: ⤵️ Download base image
-#        run: docker pull "${{ steps.flags.outputs.from }}"
+      - name: ⤵️ Download base image
+        run: docker pull "${{ steps.flags.outputs.from }}"
 #      - name: ✅ Verify authenticity of base image
 #        run: |
 #          vcn authenticate \
