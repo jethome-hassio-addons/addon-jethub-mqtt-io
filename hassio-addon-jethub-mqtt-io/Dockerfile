@@ -16,10 +16,8 @@ ARG BUILD_VERSION
 # In this case no needed:
 #   apk: rust, cargo, musl-dev, libffi-dev, libressl-dev, gcc?
 #   pip: setuptools-rust, poetry
-# FIXME: is openssl needed? We added libressl-dev
 # https://github.com/FrederikP/python-poetry-alpine/blob/master/Dockerfile
 
-#         openssl=1.1.1l-r0 \
 # hadolint ignore=DL3003
 RUN apk add --no-cache --virtual .build-dependencies \
         gcc=10.3.1_git20210424-r2 \
