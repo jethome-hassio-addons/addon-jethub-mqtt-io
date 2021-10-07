@@ -49,7 +49,7 @@ digital_inputs:
       name: JetHub Input 4
 
 digital_outputs:
-  - name: output1
+  - name: stat_led_red
     module: gpio
     pin: 26
     initial: low
@@ -57,7 +57,7 @@ digital_outputs:
     ha_discovery:
       component: switch
       name: JetHub stat LED red
-  - name: output1
+  - name: stat_led_green
     module: gpio
     pin: 27
     initial: low
