@@ -176,6 +176,8 @@ jobs:
       - name: 🚀 Build
         uses: docker/build-push-action@v2.7.0
         with:
+          tags: |
+            ghcr.io/jethome-ru/${{ needs.information.outputs.target }}/${{ matrix.architecture }}:edge
           push: false
           context: ${{ needs.information.outputs.target }}
           file: ${{ needs.information.outputs.target }}/Dockerfile
