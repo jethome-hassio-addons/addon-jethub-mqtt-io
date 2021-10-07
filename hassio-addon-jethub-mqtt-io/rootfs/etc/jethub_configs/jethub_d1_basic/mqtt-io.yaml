@@ -1,5 +1,8 @@
 ---
 mqtt:
+  host: XXXXXXXXXXXX
+  user: XXXXXXXXXXXX
+  password: XXXXXXXXXXXX
   status_payload_running: available
   status_payload_stopped: unavailable
   status_payload_dead: unavailable
