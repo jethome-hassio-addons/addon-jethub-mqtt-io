@@ -1,14 +1,14 @@
 #!/usr/bin/with-contenv bashio
 
 JETHUB_MODEL=$(cat /etc/jethub_model)
-GLOBAL_CONFIG=/etc/jethub_configs/$JETHUB_MODEL/global.yaml
+JETHUB_GLOBAL_CONFIG_FILE=/etc/jethub_configs/$JETHUB_MODEL/global.yaml
 UNEXPORTED_PINS_FILE=/tmp/jethub_unexported
 
-if ! test -f "$GLOBAL_CONFIG"; then
-  bashio::exit.nok "Global JetHub config not found at path '$GLOBAL_CONFIG'"
+if ! test -f "$JETHUB_GLOBAL_CONFIG_FILE"; then
+  bashio::exit.nok "Global JetHub config not found at path '$JETHUB_GLOBAL_CONFIG_FILE'"
 fi
 
-SYSFS_GPIO_PINS=$(yq '.sysfs_gpio[]' "$GLOBAL_CONFIG")
+SYSFS_GPIO_PINS=$(yq '.sysfs_gpio[]' "$JETHUB_GLOBAL_CONFIG_FILE")
 
 # Clear unexported pins file
 echo > "$UNEXPORTED_PINS_FILE"
