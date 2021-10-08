@@ -2,12 +2,19 @@
 
 JETHUB_MODEL=$(cat /etc/jethub_model)
 
-MQTT_IO_CONFIG_TEMPLATE=/etc/jethub_configs/$JETHUB_MODEL/mqtt-io.yaml
 MQTT_IO_CONFIG=/etc/mqtt-io.conf
+JETHUB_GLOBAL_CONFIG_FILE=/etc/jethub_configs/$JETHUB_MODEL/global.yaml
+MQTT_IO_CONFIG_TEMPLATE=/etc/jethub_configs/$JETHUB_MODEL/mqtt-io.yaml
+
+if ! test -f "$JETHUB_GLOBAL_CONFIG_FILE"; then
+  bashio::exit.nok "Global JetHub config not found at path '$JETHUB_GLOBAL_CONFIG_FILE'"
+fi
 
 if ! test -f "$MQTT_IO_CONFIG_TEMPLATE"; then
   bashio::exit.nok "mqtt-io template config not found at path '$MQTT_IO_CONFIG_TEMPLATE'"
 fi
+
+JETHUB_MARKETING_NAME=$(yq -r '.marketing_name' "$JETHUB_GLOBAL_CONFIG_FILE")
 
 ######################################################################
 
@@ -65,12 +72,15 @@ function set_mqtt_io_cfg {
 
 cp "$MQTT_IO_CONFIG_TEMPLATE" "$MQTT_IO_CONFIG"
 
-bashio::log.info "Preparing mqtt-io config to for model: '$JETHUB_MODEL' from '$MQTT_IO_CONFIG_TEMPLATE'"
+bashio::log.info "Preparing mqtt-io config to for model: '$JETHUB_MODEL' ($JETHUB_MARKETING_NAME) from '$MQTT_IO_CONFIG_TEMPLATE'"
 
 MQTT_CLIENT_ID=$(bashio::config 'mqtt.client_id')
 TOPIC_PREFIX=$(bashio::config 'mqtt.topic_prefix')
 
 ######################################################################
+
+
+set_mqtt_io_cfg "mqtt.ha_discovery.name" tostring "$JETHUB_MARKETING_NAME"
 
 set_mqtt_io_cfg "mqtt.host" tostring "$MQTT_HOST"
 set_mqtt_io_cfg "mqtt.port" tonumber "$MQTT_PORT"
