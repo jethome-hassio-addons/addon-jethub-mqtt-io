@@ -13,7 +13,16 @@ Home Assistant via [mqtt-io](https://github.com/flyte/mqtt-io)
 
 ## Supported devices:
 
-- [JetHome JetHub D1](http://jethome.ru/jethub-d1) (Basic version with 3 relays, 4 inputs and 1-wire).
+### [JetHome JetHub D1](http://jethome.ru/jethub-d1) (Basic version with 3 relays, 4 inputs and 1-wire).
+
+**Exposed peripheral:**
+
+- 3 relays
+- 4 inputs
+- internal stat LED (green/red)
+
+**Note**: _You still need to use native Home Assistant [1-Wire](https://www.home-assistant.io/integrations/onewire/) integration to expose 1-Wire device
+like temperature sensors `DS18B20`_
 
 ## Installation
 
