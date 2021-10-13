@@ -27,7 +27,13 @@ RUN apk add --no-cache \
     && pip install --no-cache-dir poetry==1.1.10
 
 WORKDIR /usr/src
-RUN git clone --single-branch --branch 2.2.6 https://github.com/flyte/mqtt-io mqtt_io
+#RUN git clone --single-branch --branch 2.2.6 https://github.com/flyte/mqtt-io mqtt_io
+
+# hadolint ignore=DL3003
+RUN git clone -n --single-branch --branch handle_initial_none https://github.com/Hacker-CB/mqtt-io mqtt_io \
+    && cd mqtt_io \
+    && git checkout 1a985bd5a204da00779c47ed7bb5be170da0de0b
+
 
 WORKDIR /usr/src/mqtt_io
 RUN mkdir -p /home/mqtt_io \
