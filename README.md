@@ -36,5 +36,16 @@ If you find any issues with the add-on, please check the
 [issue tracker](https://github.com/jethome-ru/hassio-addon-jethub-mqtt-io/issues)
 or similar issues before creating one.
 
+
+## JetHome resources:
+
+- Documentation - https://wiki.jethome.ru 3
+- Official website - http://jethome.ru 2
+- Telegram news channel - https://t.me/jethome_news
+- Telegram official chat - https://t.me/jethomeru
+- GitHub: https://github.com/jethome-ru 1
+- E-Store: http://jhome.ru 2
+- Instagram - https://instagram.com/jethomeru
+
 [docs]: https://github.com/jethome-ru/hassio-addon-jethub-mqtt-io/blob/main/hassio-addon-jethub-mqtt-io/DOCS.md
 [logo]: hassio-addon-jethub-mqtt-io/logo.png "JetHub mqtt-io"
