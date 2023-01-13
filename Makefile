@@ -6,8 +6,7 @@
 ROOT_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 OUTPUT_DIR:=$(ROOT_DIR)/build
 
-# TODO: detect BUILDER_ARCH from the host system
-BUILDER_ARCH := amd64
+BUILDER_ARCH := $(strip $(shell docker info | grep Architecture | sed -E 's/Architecture://'))
 BUILDER_IMAGE := homeassistant/$(BUILDER_ARCH)-builder
 
 IMAGE_SUFFIX?=-dev
@@ -129,7 +128,7 @@ help:
 		echo "\t$$T"; \
 	done
 	@echo ""
-	@echo "Addon base image run targets:"
+	@echo "Addon base image run targets: (For manual build debugging)"
 	@echo ""
 	@for T in $(ALL_ADDON_ARCH_VARIANTS_RUN_BASE); do \
 		echo "\t$$T"; \
