@@ -36,7 +36,6 @@ If you find any issues with the add-on, please check the
 [issue tracker](https://github.com/jethome-ru/hassio-addon-jethub-mqtt-io/issues)
 or similar issues before creating one.
 
-
 ## JetHome resources:
 
 - Documentation - https://wiki.jethome.ru 3

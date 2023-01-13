@@ -19,7 +19,6 @@ mqtt:
   topic_prefix: jethub-mqtt-io
 ```
 
-
 Advanced add-on configuration:
 
 ```yaml
@@ -36,7 +35,7 @@ mqtt:
 
 ### Option: `log_level`
 
-Log level. 
+Log level.
 
 One of: trace, debug, info, notice, warning, error, fatal
 
@@ -55,4 +54,3 @@ JetHub model.
 - `mqtt.password`: MQTT server password (leave blank for auto-discovery)
 - `mqtt.client_id`: MQTT client id.
 - `mqtt.topic_prefix`: MQTT topic prefix
- 
