@@ -22,7 +22,7 @@ if [ "$JETHUB_MODEL" == "auto" ]; then
 fi
 
 
-if ! test -d $JETHUB_CONFIGS_BASE_DIR/$JETHUB_MODEL; then
+if ! test -d "$JETHUB_CONFIGS_BASE_DIR/$JETHUB_MODEL"; then
   bashio::exit.nok "Invalid JetHub model: '$JETHUB_MODEL', no configs found"
 fi
 
