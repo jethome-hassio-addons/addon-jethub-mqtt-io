@@ -4,6 +4,13 @@ version: dev
 slug: jethub-mqtt-io
 description: Expose JetHome JetHub peripheral (relays, inputs, etc..) via mqtt-io
 url: https://github.com/jethome-hassio-addons/addon-jethub-mqtt-io
+#
+# Error `S6-overlay-suexec: fatal: can only run as pid 1
+# Breaking changes, need to set init: false
+#  https://community.home-assistant.io/t/s6-overlay-suexec-fatal-can-only-run-as-pid-1/426969/5
+#  https://www.home-assistant.io/blog/2022/06/01/release-20226/#breaking-changes
+#
+init: false
 services:
   - mqtt:need
 arch:
