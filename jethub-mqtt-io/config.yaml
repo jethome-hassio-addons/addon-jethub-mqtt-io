@@ -4,7 +4,7 @@ version: dev
 slug: jethub-mqtt-io
 description: Expose JetHome JetHub peripheral (relays, inputs, etc..) via mqtt-io
 url: https://github.com/jethome-hassio-addons/addon-jethub-mqtt-io
-init: false # https://developers.home-assistant.io/blog/2022/05/12/s6-overlay-base-images/
+init: false  # https://developers.home-assistant.io/blog/2022/05/12/s6-overlay-base-images/
 services:
   - mqtt:need
 arch:
