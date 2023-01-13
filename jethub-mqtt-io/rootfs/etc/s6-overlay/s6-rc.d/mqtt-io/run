@@ -89,3 +89,12 @@ set_mqtt_io_cfg "mqtt.password" tostring "$MQTT_PASSWORD"
 set_mqtt_io_cfg "mqtt.client_id" tostring "$MQTT_CLIENT_ID"
 set_mqtt_io_cfg "mqtt.topic_prefix" tostring "$TOPIC_PREFIX"
 
+######################################################################
+
+bashio::log.info "Starting mqtt-io.."
+
+# we need to use "exec" for correct stopping
+# https://github.com/just-containers/s6-overlay/issues/229
+
+cd /home/mqtt_io
+exec /home/mqtt_io/venv/bin/python -m mqtt_io /etc/mqtt-io.conf
