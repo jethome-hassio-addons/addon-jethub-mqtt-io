@@ -12,6 +12,13 @@ ARG BUILD_REF
 ARG BUILD_REPOSITORY
 ARG BUILD_VERSION
 
+#ENV MQTT_IO_REPO=https://github.com/Hacker-CB/mqtt-io
+#ENV MQTT_IO_VERSION=handle_initial_none
+
+ENV MQTT_IO_REPO=https://github.com/flyte/mqtt-io
+ENV MQTT_IO_VERSION=2.2.7
+
+
 #
 # Generate requirements.txt with poetry
 #
@@ -31,9 +38,9 @@ WORKDIR /usr/src
 #RUN git clone --single-branch --branch 2.2.6 https://github.com/flyte/mqtt-io mqtt_io
 
 # hadolint ignore=DL3003
-RUN git clone -n --single-branch --branch handle_initial_none https://github.com/Hacker-CB/mqtt-io mqtt_io \
+RUN git clone -n --single-branch --branch "$MQTT_IO_VERSION" "$MQTT_IO_REPO" mqtt_io \
     && cd mqtt_io \
-    && git checkout 1a985bd5a204da00779c47ed7bb5be170da0de0b
+    && git checkout "$MQTT_IO_VERSION"
 
 
 WORKDIR /usr/src/mqtt_io
