@@ -8,7 +8,7 @@ mqtt:
   status_payload_dead: unavailable
   ha_discovery:
     name: JetHub
-    enabled: yes
+    enabled: true
 
 # GPIO
 gpio_modules:
