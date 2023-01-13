@@ -202,7 +202,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 🚀 Dispatch repository updater update signal
-        uses: peter-evans/repository-dispatch@v1.1.3
+        uses: peter-evans/repository-dispatch@v2.1.1
         with:
           token: ${{ secrets.HASSIO_REPOSITORIES_DISPATCH_TOKEN }}
           repository: jethome-ru/hassio-repository-edge
@@ -228,7 +228,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 🚀 Dispatch repository updater update signal
-        uses: peter-evans/repository-dispatch@v1.1.3
+        uses: peter-evans/repository-dispatch@v2.1.1
         with:
           token: ${{ secrets.HASSIO_REPOSITORIES_DISPATCH_TOKEN }}
           repository: jethome-ru/hassio-repository-beta
@@ -252,7 +252,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 🚀 Dispatch repository updater update signal
-        uses: peter-evans/repository-dispatch@v1.1.3
+        uses: peter-evans/repository-dispatch@v2.1.1
         with:
           token: ${{ secrets.HASSIO_REPOSITORIES_DISPATCH_TOKEN }}
           repository: jethome-ru/hassio-repository
