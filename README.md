@@ -33,7 +33,7 @@ Add the repository URL under **Supervisor → Add-on store → ⋮ → Manage ad
 # Issues
 
 If you find any issues with the add-on, please check the
-[issue tracker](https://github.com/jethome-ru/hassio-addon-jethub-mqtt-io/issues)
+[issue tracker](https://github.com/jethome-hassio-addons/addon-jethub-mqtt-io/issues)
 or similar issues before creating one.
 
 ## JetHome resources:
@@ -46,5 +46,5 @@ or similar issues before creating one.
 - E-Store: http://jhome.ru 2
 - Instagram - https://instagram.com/jethomeru
 
-[docs]: https://github.com/jethome-ru/hassio-addon-jethub-mqtt-io/blob/main/hassio-addon-jethub-mqtt-io/DOCS.md
-[logo]: hassio-addon-jethub-mqtt-io/logo.png "JetHub mqtt-io"
+[docs]: https://github.com/jethome-hassio-addons/addon-jethub-mqtt-io/blob/main/jethub-mqtt-io/DOCS.md
+[logo]: addon-jethub-mqtt-io/logo.png "JetHub mqtt-io"
