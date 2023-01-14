@@ -44,5 +44,5 @@ or similar issues before creating one.
 - Telegram official chat - https://t.me/jethomeru
 - GitHub: https://github.com/jethome-ru
 
-[docs]: https://github.com/jethome-ru/hassio-addon-jethub-mqtt-io/blob/main/hassio-addon-jethub-mqtt-io/DOCS.md
-[logo]: hassio-addon-jethub-mqtt-io/logo.png "JetHub mqtt-io"
+[docs]: https://github.com/jethome-hassio-addons/addon-jethub-mqtt-io/blob/main/jethub-mqtt-io/DOCS.md
+[logo]: jethub-mqtt-io/logo.png "JetHub mqtt-io"
