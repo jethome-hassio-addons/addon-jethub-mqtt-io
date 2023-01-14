@@ -38,13 +38,11 @@ or similar issues before creating one.
 
 ## JetHome resources:
 
-- Documentation - https://wiki.jethome.ru 3
-- Official website - http://jethome.ru 2
+- Documentation - https://wiki.jethome.ru
+- Official website - http://jethome.ru
 - Telegram news channel - https://t.me/jethome_news
 - Telegram official chat - https://t.me/jethomeru
-- GitHub: https://github.com/jethome-ru 1
-- E-Store: http://jhome.ru 2
-- Instagram - https://instagram.com/jethomeru
+- GitHub: https://github.com/jethome-ru
 
-[docs]: https://github.com/jethome-hassio-addons/addon-jethub-mqtt-io/blob/main/jethub-mqtt-io/DOCS.md
-[logo]: addon-jethub-mqtt-io/logo.png "JetHub mqtt-io"
+[docs]: https://github.com/jethome-ru/hassio-addon-jethub-mqtt-io/blob/main/hassio-addon-jethub-mqtt-io/DOCS.md
+[logo]: hassio-addon-jethub-mqtt-io/logo.png "JetHub mqtt-io"
