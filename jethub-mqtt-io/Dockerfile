@@ -16,7 +16,7 @@ ARG BUILD_VERSION
 #ENV MQTT_IO_VERSION=handle_initial_none
 
 ENV MQTT_IO_REPO=https://github.com/flyte/mqtt-io
-ENV MQTT_IO_VERSION=2.2.7
+ENV MQTT_IO_VERSION=2.2.8
 
 
 #
