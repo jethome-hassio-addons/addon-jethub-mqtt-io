@@ -30,8 +30,8 @@ RUN apk add --no-cache \
         musl=1.2.3-r2 \
         musl-dev=1.2.3-r2 \
         libffi-dev=3.4.2-r1 \
-        git=2.36.3-r0 \
-    \
+        git=2.36.4-r0    \
+ \
     && pip install --no-cache-dir poetry==1.3.2
 
 WORKDIR /usr/src
