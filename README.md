@@ -28,7 +28,7 @@ like temperature sensors `DS18B20`_
 
 Add the repository URL under **Supervisor → Add-on store → ⋮ → Manage add-on repositories**:
 
-    https://github.com/jethome-ru/hassio-repository
+    https://github.com/jethome-hassio-addons/repository
 
 # Issues
 
