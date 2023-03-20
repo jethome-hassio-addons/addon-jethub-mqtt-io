@@ -25,12 +25,12 @@ ENV MQTT_IO_VERSION=2.2.8
 FROM base AS requirements
 
 RUN apk add --no-cache \
-        openssl=1.1.1s-r0 \
+        openssl=1.1.1t-r0 \
         gcc=11.2.1_git20220219-r2 \
         musl=1.2.3-r2 \
         musl-dev=1.2.3-r2 \
         libffi-dev=3.4.2-r1 \
-        git=2.36.4-r0    \
+        git=2.36.5-r0    \
  \
     && pip install --no-cache-dir poetry==1.3.2
 
