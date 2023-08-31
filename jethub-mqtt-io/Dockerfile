@@ -16,7 +16,7 @@ ARG BUILD_VERSION
 #ENV MQTT_IO_VERSION=handle_initial_none
 
 ENV MQTT_IO_REPO=https://github.com/flyte/mqtt-io
-ENV MQTT_IO_VERSION=2.2.8
+ENV MQTT_IO_VERSION=2.2.9d
 
 
 #
@@ -25,23 +25,21 @@ ENV MQTT_IO_VERSION=2.2.8
 FROM base AS requirements
 
 RUN apk add --no-cache \
-        openssl=1.1.1t-r0 \
-        gcc=11.2.1_git20220219-r2 \
-        musl=1.2.3-r2 \
-        musl-dev=1.2.3-r2 \
-        libffi-dev=3.4.2-r1 \
-        git=2.36.5-r0    \
- \
+        openssl1.1-compat=1.1.1u-r1 \
+        gcc=12.2.1_git20220924-r10 \
+        musl=1.2.4-r1 \
+        musl-dev=1.2.4-r1 \
+        libffi-dev=3.4.4-r2 \
+        git=2.40.1-r0    \
     && pip install --no-cache-dir poetry==1.3.2
 
 WORKDIR /usr/src
-#RUN git clone --single-branch --branch 2.2.6 https://github.com/flyte/mqtt-io mqtt_io
 
 # hadolint ignore=DL3003
 RUN git clone -n --single-branch --branch "$MQTT_IO_VERSION" "$MQTT_IO_REPO" mqtt_io \
     && cd mqtt_io \
-    && git checkout "$MQTT_IO_VERSION"
-
+    && git checkout "$MQTT_IO_VERSION" \
+    && wget -q -O pyproject.toml https://raw.githubusercontent.com/flyte/mqtt-io/2bb2f945ea47ed87f99ab4fc966d2dbbd47fc7c7/pyproject.toml
 
 WORKDIR /usr/src/mqtt_io
 RUN mkdir -p /home/mqtt_io \
