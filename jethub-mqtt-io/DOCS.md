@@ -5,11 +5,11 @@ Home Assistant via MQTT with autodiscovery support.
 
 ## Supported Devices
 
-| Model | Description |
-|-------|-------------|
-| JetHub H1 (J80) | JetHome ARM controller |
-| JetHub D1/D1+ (J100) | JetHome ARM controller with 4 inputs, 3 relays, status LED |
-| JetHub D2 (J200) | JetHome ARM controller with 3 inputs, 2 relays, status LED, UXM slots |
+| Model                | Description                                                           |
+| -------------------- | --------------------------------------------------------------------- |
+| JetHub H1 (J80)      | JetHome ARM controller                                                |
+| JetHub D1/D1+ (J100) | JetHome ARM controller with 4 inputs, 3 relays, status LED            |
+| JetHub D2 (J200)     | JetHome ARM controller with 3 inputs, 2 relays, status LED, UXM slots |
 
 ## Configuration
 
@@ -64,6 +64,7 @@ Log level for the application.
 JetHub model selection.
 
 **Values**:
+
 - `auto` - Auto-detect JetHub model from device tree
 - `jethub-h1` - JetHome JetHub H1 (J80)
 - `jethub-d1` - JetHome JetHub D1/D1+ (J100)
@@ -90,16 +91,16 @@ instead of the built-in configuration for your JetHub model.
 
 MQTT connection settings.
 
-| Option | Description | Default |
-|--------|-------------|---------|
-| `mqtt.host` | MQTT server host (leave blank for auto-discovery) | auto |
-| `mqtt.port` | MQTT server port (leave blank for auto-discovery) | auto |
-| `mqtt.user` | MQTT server user (leave blank for auto-discovery) | auto |
-| `mqtt.password` | MQTT server password (leave blank for auto-discovery) | auto |
-| `mqtt.client_id` | MQTT client ID | `jethub-mqtt-io` |
-| `mqtt.topic_prefix` | MQTT topic prefix | `jethub-mqtt-io` |
-| `mqtt.keepalive` | MQTT keepalive interval (seconds) | `60` |
-| `mqtt.qos` | MQTT QoS level (0, 1, or 2) | `1` |
+| Option              | Description                                           | Default          |
+| ------------------- | ----------------------------------------------------- | ---------------- |
+| `mqtt.host`         | MQTT server host (leave blank for auto-discovery)     | auto             |
+| `mqtt.port`         | MQTT server port (leave blank for auto-discovery)     | auto             |
+| `mqtt.user`         | MQTT server user (leave blank for auto-discovery)     | auto             |
+| `mqtt.password`     | MQTT server password (leave blank for auto-discovery) | auto             |
+| `mqtt.client_id`    | MQTT client ID                                        | `jethub-mqtt-io` |
+| `mqtt.topic_prefix` | MQTT topic prefix                                     | `jethub-mqtt-io` |
+| `mqtt.keepalive`    | MQTT keepalive interval (seconds)                     | `60`             |
+| `mqtt.qos`          | MQTT QoS level (0, 1, or 2)                           | `1`              |
 
 ## MQTT Topics
 
@@ -121,58 +122,58 @@ via MQTT discovery. No manual configuration is required.
 
 ### JetHub D1/D1+ (Basic)
 
-| Resource | Type | Description |
-|----------|------|-------------|
-| jethub_front_button | Input | Front panel button |
-| jethub_input_1..4 | Input | Digital inputs |
-| stat_led_red | Output | Status LED (red) |
-| stat_led_green | Output | Status LED (green) |
-| jethub_relay_1..3 | Output | Relays |
+| Resource            | Type   | Description        |
+| ------------------- | ------ | ------------------ |
+| jethub_front_button | Input  | Front panel button |
+| jethub_input_1..4   | Input  | Digital inputs     |
+| stat_led_red        | Output | Status LED (red)   |
+| stat_led_green      | Output | Status LED (green) |
+| jethub_relay_1..3   | Output | Relays             |
 
 ### JetHub D1/D1+ (Module)
 
 Includes all basic resources plus:
 
-| Resource | Type | Description |
-|----------|------|-------------|
-| zigbee_boot | Output | ZigBee module BOOT pin |
+| Resource     | Type   | Description             |
+| ------------ | ------ | ----------------------- |
+| zigbee_boot  | Output | ZigBee module BOOT pin  |
 | zigbee_reset | Output | ZigBee module RESET pin |
 
 ### JetHub D2 (Basic)
 
-| Resource | Type | Description |
-|----------|------|-------------|
-| jethub_user_button | Input | Front panel button |
-| jethub_input_1..3 | Input | Digital inputs |
-| jethub_relay_1..2 | Output | Relays |
+| Resource           | Type   | Description        |
+| ------------------ | ------ | ------------------ |
+| jethub_user_button | Input  | Front panel button |
+| jethub_input_1..3  | Input  | Digital inputs     |
+| jethub_relay_1..2  | Output | Relays             |
 
 ### JetHub D2 (Module)
 
 Includes all basic resources plus UXM slot control pins:
 
-| Resource | Type | Description |
-|----------|------|-------------|
+| Resource   | Type   | Description          |
+| ---------- | ------ | -------------------- |
 | uxm1_reset | Output | UXM slot 1 RESET pin |
-| uxm1_boot | Output | UXM slot 1 BOOT pin |
+| uxm1_boot  | Output | UXM slot 1 BOOT pin  |
 | uxm2_reset | Output | UXM slot 2 RESET pin |
-| uxm2_boot | Output | UXM slot 2 BOOT pin |
+| uxm2_boot  | Output | UXM slot 2 BOOT pin  |
 
 ### JetHub H1 (Basic)
 
-| Resource | Type | Description |
-|----------|------|-------------|
-| stat_led | Output | Status LED |
+| Resource | Type   | Description |
+| -------- | ------ | ----------- |
+| stat_led | Output | Status LED  |
 
 ### JetHub H1 (Module)
 
 Includes all basic resources plus:
 
-| Resource | Type | Description |
-|----------|------|-------------|
-| zigbee_reset | Output | ZigBee module RESET pin |
-| zigbee_boot | Output | ZigBee module BOOT pin |
+| Resource      | Type   | Description             |
+| ------------- | ------ | ----------------------- |
+| zigbee_reset  | Output | ZigBee module RESET pin |
+| zigbee_boot   | Output | ZigBee module BOOT pin  |
 | module2_reset | Output | Module-2 slot RESET pin |
-| module2_boot | Output | Module-2 slot BOOT pin |
+| module2_boot  | Output | Module-2 slot BOOT pin  |
 
 ## Troubleshooting
 
