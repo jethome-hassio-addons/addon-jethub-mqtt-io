@@ -1,8 +1,8 @@
 ---
-name: JetHome JetHub GPIO2MQTT
+name: JetHome JetHub mqtt-io peripheral exposer
 version: dev
 slug: jethub-mqtt-io
-description: GPIO to MQTT bridge for JetHome JetHub controllers with Home Assistant autodiscovery
+description: Expose JetHome JetHub peripheral (relays, inputs, etc..) via mqtt-io
 url: https://github.com/jethome-hassio-addons/addon-jethub-mqtt-io
 init: false
 hassio_api: true
