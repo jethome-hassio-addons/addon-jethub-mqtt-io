@@ -1,89 +1,93 @@
-ARG BUILD_FROM
+# Runtime Dockerfile for gpio2mqtt addon
+# Downloads pre-built binary from GHCR via ORAS
 
+ARG BUILD_FROM=debian:bookworm-slim
+
+# Stage 1: Download binary from GHCR
+FROM debian:bookworm-slim AS downloader
+
+ARG BUILD_ARCH=aarch64
+ARG BINARY_VERSION=dev
+
+# Map Home Assistant arch to binary arch
+# aarch64 -> arm64, amd64 -> amd64
+RUN case "${BUILD_ARCH}" in \
+        aarch64) ARCH="arm64" ;; \
+        amd64) ARCH="amd64" ;; \
+        *) echo "Unsupported architecture: ${BUILD_ARCH}" && exit 1 ;; \
+    esac && \
+    echo "ARCH=${ARCH}" > /tmp/arch.env
+
+# Install oras (detect host architecture for cross-compilation support)
+# hadolint ignore=DL3008
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && ORAS_ARCH=$(dpkg --print-architecture) \
+    && curl -LO "https://github.com/oras-project/oras/releases/download/v1.2.2/oras_1.2.2_linux_${ORAS_ARCH}.tar.gz" \
+    && tar -xzf "oras_1.2.2_linux_${ORAS_ARCH}.tar.gz" -C /usr/local/bin oras \
+    && rm -f "oras_1.2.2_linux_${ORAS_ARCH}.tar.gz"
+
+# Download binary from GHCR
+# hadolint ignore=DL3003
+RUN . /tmp/arch.env && \
+    mkdir -p /download && \
+    cd /download && \
+    oras pull "ghcr.io/jethome-iot/gpio2mqtt-bin:${BINARY_VERSION}-${ARCH}" && \
+    mv gpio2mqtt-linux-${ARCH} gpio2mqtt && \
+    chmod +x gpio2mqtt
+
+# Stage 2: Final image
 # hadolint ignore=DL3006
-FROM ${BUILD_FROM} as base
+FROM ${BUILD_FROM}
 
-# Common build arguments
+# Install runtime dependencies
+# hadolint ignore=DL3008
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgpiod2 \
+    ca-certificates \
+    curl \
+    jq \
+    python3 \
+    python3-yaml \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy binary from downloader stage
+COPY --from=downloader /download/gpio2mqtt /usr/local/bin/gpio2mqtt
+
+# Copy root filesystem (scripts, configs)
+COPY rootfs /
+
+# Make scripts executable
+RUN chmod +x /usr/local/bin/*.sh
+
+# Set working directory
+WORKDIR /data
+
+# Default command
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
+# Labels
 ARG BUILD_ARCH
 ARG BUILD_DATE
-ARG BUILD_DESCRIPTION
-ARG BUILD_NAME
+ARG BUILD_DESCRIPTION="Expose JetHome JetHub peripheral (relays, inputs, etc..) via mqtt-io"
+ARG BUILD_NAME="JetHome JetHub mqtt-io peripheral exposer"
 ARG BUILD_REF
 ARG BUILD_REPOSITORY
 ARG BUILD_VERSION
 
-#ENV MQTT_IO_REPO=https://github.com/Hacker-CB/mqtt-io
-#ENV MQTT_IO_VERSION=handle_initial_none
-
-ENV MQTT_IO_REPO=https://github.com/flyte/mqtt-io
-ENV MQTT_IO_VERSION=2.2.9d
-
-
-#
-# Generate requirements.txt with poetry
-#
-FROM base AS requirements
-
-RUN apk add --no-cache \
-        openssl1.1-compat=1.1.1u-r1 \
-        gcc=12.2.1_git20220924-r10 \
-        musl=1.2.4-r1 \
-        musl-dev=1.2.4-r1 \
-        libffi-dev=3.4.4-r2 \
-        git=2.40.1-r0    \
-    && pip install --no-cache-dir poetry==1.3.2
-
-WORKDIR /usr/src
-
-# hadolint ignore=DL3003
-RUN git clone -n --single-branch --branch "$MQTT_IO_VERSION" "$MQTT_IO_REPO" mqtt_io \
-    && cd mqtt_io \
-    && git checkout "$MQTT_IO_VERSION" \
-    && wget -q -O pyproject.toml https://raw.githubusercontent.com/flyte/mqtt-io/2bb2f945ea47ed87f99ab4fc966d2dbbd47fc7c7/pyproject.toml
-
-WORKDIR /usr/src/mqtt_io
-RUN mkdir -p /home/mqtt_io \
-    && poetry export -o /home/mqtt_io/requirements.txt
-
-WORKDIR /home/mqtt_io
-RUN python3 -m venv venv \
-    && venv/bin/pip install wheel==0.37.0
-
-#
-# Generate final image
-#
-FROM base
-
-# Install global packages
-RUN pip install --no-cache-dir yq==2.12.2
-
-WORKDIR /home/mqtt_io
-
-# Copy mqtt-io
-COPY --from=requirements /home/mqtt_io/venv ./venv
-COPY --from=requirements /home/mqtt_io/requirements.txt ./
-COPY --from=requirements /usr/src/mqtt_io/mqtt_io mqtt_io
-
-RUN venv/bin/pip install --no-cache-dir -r requirements.txt && \
-    venv/bin/pip install --no-cache-dir gpiod==1.5.0
-
-# Copy root filesystem
-COPY rootfs /
-
-#
-# Labels
-#
 LABEL \
     io.hass.name="${BUILD_NAME}" \
     io.hass.description="${BUILD_DESCRIPTION}" \
     io.hass.arch="${BUILD_ARCH}" \
     io.hass.type="addon" \
     io.hass.version=${BUILD_VERSION} \
-    maintainer="Pavel Sokolov <pavel@jethome.ru>" \
+    maintainer="JetHome Team <dev@jethome.com>" \
     org.opencontainers.image.title="${BUILD_NAME}" \
     org.opencontainers.image.description="${BUILD_DESCRIPTION}" \
     org.opencontainers.image.vendor="JetHome" \
-    org.opencontainers.image.authors="Pavel Sokolov <pavel@jethome.ru>" \
+    org.opencontainers.image.authors="JetHome Team <dev@jethome.com>" \
     org.opencontainers.image.licenses="MIT" \
     org.opencontainers.image.url="https://jethome.ru" \
     org.opencontainers.image.source="https://github.com/${BUILD_REPOSITORY}" \

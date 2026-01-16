@@ -1,0 +1,85 @@
+---
+# JetHub H1 Module Configuration for gpio2mqtt
+#
+# JetHub H1 is an ARM-based home automation controller with:
+# - Status LED
+# - ZigBee module control (BOOT, RESET)
+# - Module-2 slot control (BOOT, RESET)
+#
+# GPIO Chips:
+#   gpiochip0 (periphs-banks): Main GPIO
+#   gpiochip1 (aobus-banks): Always-On GPIO
+
+mqtt:
+  host: XXXXXXXXXXXX
+  port: 1883
+  user: XXXXXXXXXXXX
+  password: XXXXXXXXXXXX
+  topic_prefix: jethub-mqtt-io
+  # Birth/LWT messages
+  status_payload_running: available
+  status_payload_stopped: unavailable
+  status_payload_dead: unavailable
+  ha_discovery:
+    enabled: true
+    prefix: homeassistant
+
+gpio_modules:
+  - name: gpio
+    module: gpiod
+    chip: /dev/gpiochip0
+
+  - name: gpio_ao
+    module: gpiod
+    chip: /dev/gpiochip1
+
+digital_outputs:
+  # Status LED
+  - name: stat_led
+    module: gpio_ao
+    pin: 73
+    default: "off"
+    ha_discovery:
+      component: switch
+      name: JetHub H1 LED
+
+  # ZigBee module control
+  - name: zigbee_reset
+    module: gpio
+    pin: 6
+    default: "off"
+    ha_discovery:
+      component: switch
+      name: JetHub H1 ZigBee RESET
+
+  - name: zigbee_boot
+    module: gpio
+    pin: 9
+    default: "off"
+    ha_discovery:
+      component: switch
+      name: JetHub H1 ZigBee BOOT
+
+  # Module-2 slot control
+  - name: module2_reset
+    module: gpio_ao
+    pin: 89
+    default: "off"
+    ha_discovery:
+      component: switch
+      name: JetHub H1 Module-2 RESET
+
+  - name: module2_boot
+    module: gpio_ao
+    pin: 90
+    default: "off"
+    ha_discovery:
+      component: switch
+      name: JetHub H1 Module-2 BOOT
+
+options:
+  convention: homeassistant
+  device:
+    name: JetHub H1
+    manufacturer: JetHome
+    model: JetHub H1

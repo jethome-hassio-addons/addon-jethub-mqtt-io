@@ -1,0 +1,45 @@
+---
+# JetHub H1 Configuration for gpio2mqtt
+#
+# JetHub H1 is an ARM-based home automation controller with:
+# - Status LED
+#
+# GPIO Chips:
+#   gpiochip0 (periphs-banks): Main GPIO
+#   gpiochip1 (aobus-banks): Always-On GPIO
+
+mqtt:
+  host: XXXXXXXXXXXX
+  port: 1883
+  user: XXXXXXXXXXXX
+  password: XXXXXXXXXXXX
+  topic_prefix: jethub-mqtt-io
+  # Birth/LWT messages
+  status_payload_running: available
+  status_payload_stopped: unavailable
+  status_payload_dead: unavailable
+  ha_discovery:
+    enabled: true
+    prefix: homeassistant
+
+gpio_modules:
+  - name: gpio_ao
+    module: gpiod
+    chip: /dev/gpiochip1
+
+digital_outputs:
+  # Status LED
+  - name: stat_led
+    module: gpio_ao
+    pin: 73
+    default: "off"
+    ha_discovery:
+      component: switch
+      name: JetHub H1 LED
+
+options:
+  convention: homeassistant
+  device:
+    name: JetHub H1
+    manufacturer: JetHome
+    model: JetHub H1
