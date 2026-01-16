@@ -1,3 +1,4 @@
+---
 # JetHub D2 Module Configuration for gpio2mqtt
 # Based on: jethub-d2.yaml with added UXM module control pins
 #
@@ -18,9 +19,9 @@ mqtt:
   password: XXXXXXXXXXXX
   topic_prefix: jethub-mqtt-io
   # Birth/LWT messages for Home Assistant availability
-  status_payload_running: available # Birth message (on connect)
-  status_payload_stopped: unavailable # Graceful shutdown
-  status_payload_dead: unavailable # LWT (unexpected disconnect)
+  status_payload_running: available     # Birth message (on connect)
+  status_payload_stopped: unavailable   # Graceful shutdown
+  status_payload_dead: unavailable      # LWT (unexpected disconnect)
   ha_discovery:
     enabled: true
     prefix: homeassistant

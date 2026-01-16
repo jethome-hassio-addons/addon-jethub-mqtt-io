@@ -1,3 +1,4 @@
+---
 # JetHub D1 Configuration for gpio2mqtt
 # Based on: https://github.com/jethome-hassio-addons/addon-jethub-mqtt-io/blob/main/jethub-mqtt-io/rootfs/etc/jethub_configs/jethub_d1_basic/mqtt-io.yaml
 #

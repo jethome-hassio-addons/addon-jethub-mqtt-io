@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC1091
 # entrypoint.sh - Main entrypoint for JetHub GPIO2MQTT addon
 #
 # Startup sequence:
