@@ -77,7 +77,7 @@ digital_outputs:
     module: gpio
     pin: 26
     inverted: true
-    default: off
+    default: "off"
     ha_discovery:
       component: switch
       name: JetHub stat LED red
@@ -86,7 +86,7 @@ digital_outputs:
     module: gpio
     pin: 27
     inverted: true
-    default: on
+    default: "on"
     ha_discovery:
       component: switch
       name: JetHub stat LED green
@@ -95,7 +95,7 @@ digital_outputs:
   - name: jethub_relay_1
     module: gpio
     pin: 30
-    default: off
+    default: "off"
     ha_discovery:
       component: switch
       name: JetHub Relay 1
@@ -103,7 +103,7 @@ digital_outputs:
   - name: jethub_relay_2
     module: gpio
     pin: 29
-    default: off
+    default: "off"
     ha_discovery:
       component: switch
       name: JetHub Relay 2
@@ -111,7 +111,7 @@ digital_outputs:
   - name: jethub_relay_3
     module: gpio
     pin: 28
-    default: off
+    default: "off"
     ha_discovery:
       component: switch
       name: JetHub Relay 3
