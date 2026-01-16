@@ -95,6 +95,7 @@ digital_outputs:
   - name: jethub_relay_1
     module: gpio
     pin: 30
+    default: off
     ha_discovery:
       component: switch
       name: JetHub Relay 1
@@ -102,6 +103,7 @@ digital_outputs:
   - name: jethub_relay_2
     module: gpio
     pin: 29
+    default: off
     ha_discovery:
       component: switch
       name: JetHub Relay 2
@@ -109,6 +111,7 @@ digital_outputs:
   - name: jethub_relay_3
     module: gpio
     pin: 28
+    default: off
     ha_discovery:
       component: switch
       name: JetHub Relay 3

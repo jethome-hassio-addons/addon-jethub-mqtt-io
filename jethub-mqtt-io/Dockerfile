@@ -18,14 +18,15 @@ RUN case "${BUILD_ARCH}" in \
     esac && \
     echo "ARCH=${ARCH}" > /tmp/arch.env
 
-# Install oras
+# Install oras (detect host architecture for cross-compilation support)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
     && rm -rf /var/lib/apt/lists/* \
-    && curl -LO https://github.com/oras-project/oras/releases/download/v1.2.2/oras_1.2.2_linux_amd64.tar.gz \
-    && tar -xzf oras_1.2.2_linux_amd64.tar.gz -C /usr/local/bin oras \
-    && rm -f oras_1.2.2_linux_amd64.tar.gz
+    && ORAS_ARCH=$(dpkg --print-architecture) \
+    && curl -LO "https://github.com/oras-project/oras/releases/download/v1.2.2/oras_1.2.2_linux_${ORAS_ARCH}.tar.gz" \
+    && tar -xzf "oras_1.2.2_linux_${ORAS_ARCH}.tar.gz" -C /usr/local/bin oras \
+    && rm -f "oras_1.2.2_linux_${ORAS_ARCH}.tar.gz"
 
 # Download binary from GHCR
 RUN . /tmp/arch.env && \
