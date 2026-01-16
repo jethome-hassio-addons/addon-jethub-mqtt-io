@@ -1,0 +1,131 @@
+# JetHub D2 Module Configuration for gpio2mqtt
+# Based on: jethub-d2.yaml with added UXM module control pins
+#
+# JetHub D2 (J200) is an ARM-based home automation controller with:
+# - 3 digital inputs (DIN_1, DIN_2, DIN_3) on I2C GPIO expander
+# - 2 relays (RELAY_1, RELAY_2) on I2C GPIO expander
+# - User button (BUTTON_USR)
+# - UXM module slots control (UXM1/UXM2 BOOT, RESET)
+#
+# GPIO Chips:
+#   gpiochip1 (aobus-banks): Always-On GPIO, 15 lines
+#   gpiochip2 (2-0022): I2C GPIO expander (PCF8575), 16 lines
+
+mqtt:
+  host: XXXXXXXXXXXX
+  port: 1883
+  user: XXXXXXXXXXXX
+  password: XXXXXXXXXXXX
+  topic_prefix: jethub-mqtt-io
+  # Birth/LWT messages for Home Assistant availability
+  status_payload_running: available     # Birth message (on connect)
+  status_payload_stopped: unavailable   # Graceful shutdown
+  status_payload_dead: unavailable      # LWT (unexpected disconnect)
+  ha_discovery:
+    enabled: true
+    prefix: homeassistant
+
+gpio_modules:
+  # Always-On GPIO (aobus-banks) - for user button
+  - name: gpio_ao
+    module: gpiod
+    chip: /dev/gpiochip1
+
+  # I2C GPIO expander (PCF8575 at 0x22) - for relays and inputs
+  - name: gpio_expander
+    module: gpiod
+    chip: /dev/gpiochip2
+
+digital_inputs:
+  # User button on front panel
+  - name: jethub_user_button
+    module: gpio_ao
+    pin: 10
+    poll_interval: 0.05
+    ha_discovery:
+      component: binary_sensor
+      name: JetHub User Button
+
+  # Digital inputs on I2C expander
+  - name: jethub_input_1
+    module: gpio_expander
+    pin: 8
+    poll_interval: 0.05
+    ha_discovery:
+      component: binary_sensor
+      name: JetHub Input 1
+
+  - name: jethub_input_2
+    module: gpio_expander
+    pin: 9
+    poll_interval: 0.05
+    ha_discovery:
+      component: binary_sensor
+      name: JetHub Input 2
+
+  - name: jethub_input_3
+    module: gpio_expander
+    pin: 10
+    poll_interval: 0.05
+    ha_discovery:
+      component: binary_sensor
+      name: JetHub Input 3
+
+digital_outputs:
+  # Relays on I2C expander
+  - name: jethub_relay_1
+    module: gpio_expander
+    pin: 0
+    default: off
+    ha_discovery:
+      component: switch
+      name: JetHub Relay 1
+
+  - name: jethub_relay_2
+    module: gpio_expander
+    pin: 1
+    default: off
+    ha_discovery:
+      component: switch
+      name: JetHub Relay 2
+
+  # UXM module slot 1 control
+  - name: uxm1_reset
+    module: gpio_expander
+    pin: 4
+    default: off
+    ha_discovery:
+      component: switch
+      name: JetHub UXM1 RESET
+
+  - name: uxm1_boot
+    module: gpio_expander
+    pin: 5
+    default: off
+    ha_discovery:
+      component: switch
+      name: JetHub UXM1 BOOT
+
+  # UXM module slot 2 control
+  - name: uxm2_reset
+    module: gpio_expander
+    pin: 6
+    default: off
+    ha_discovery:
+      component: switch
+      name: JetHub UXM2 RESET
+
+  - name: uxm2_boot
+    module: gpio_expander
+    pin: 7
+    default: off
+    ha_discovery:
+      component: switch
+      name: JetHub UXM2 BOOT
+
+options:
+  convention: homeassistant
+  device:
+    name: JetHub D2
+    manufacturer: JetHome
+    model: JetHub D2 (J200)

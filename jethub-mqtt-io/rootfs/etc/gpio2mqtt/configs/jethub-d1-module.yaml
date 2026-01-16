@@ -1,0 +1,142 @@
+# JetHub D1 Module Configuration for gpio2mqtt
+# Based on: jethub-d1.yaml with added ZigBee module control pins
+#
+# JetHub D1 is an ARM-based home automation controller with:
+# - 4 digital inputs
+# - 3 relays
+# - Front button
+# - Status LED (red/green)
+# - ZigBee module control (BOOT, RESET)
+
+mqtt:
+  host: XXXXXXXXXXXX
+  port: 1883
+  user: XXXXXXXXXXXX
+  password: XXXXXXXXXXXX
+  topic_prefix: jethub-mqtt-io
+  # Birth/LWT messages
+  status_payload_running: available
+  status_payload_stopped: unavailable
+  status_payload_dead: unavailable
+  ha_discovery:
+    enabled: true
+    prefix: homeassistant
+
+gpio_modules:
+  - name: gpio
+    module: gpiod
+    chip: /dev/gpiochip0
+
+digital_inputs:
+  # Front panel button
+  - name: jethub_front_button
+    module: gpio
+    pin: 10
+    inverted: true
+    poll_interval: 0.05
+    ha_discovery:
+      component: binary_sensor
+      name: JetHub Front Button
+
+  # Digital inputs (accent connectors)
+  - name: jethub_input_1
+    module: gpio
+    pin: 46
+    poll_interval: 0.05
+    ha_discovery:
+      component: binary_sensor
+      name: JetHub Input 1
+
+  - name: jethub_input_2
+    module: gpio
+    pin: 45
+    poll_interval: 0.05
+    ha_discovery:
+      component: binary_sensor
+      name: JetHub Input 2
+
+  - name: jethub_input_3
+    module: gpio
+    pin: 44
+    poll_interval: 0.05
+    ha_discovery:
+      component: binary_sensor
+      name: JetHub Input 3
+
+  - name: jethub_input_4
+    module: gpio
+    pin: 43
+    poll_interval: 0.05
+    ha_discovery:
+      component: binary_sensor
+      name: JetHub Input 4
+
+digital_outputs:
+  # Status LED (accent bi-color LED)
+  - name: stat_led_red
+    module: gpio
+    pin: 26
+    inverted: true
+    default: off
+    ha_discovery:
+      component: switch
+      name: JetHub stat LED red
+
+  - name: stat_led_green
+    module: gpio
+    pin: 27
+    inverted: true
+    default: on
+    ha_discovery:
+      component: switch
+      name: JetHub stat LED green
+
+  # Relays
+  - name: jethub_relay_1
+    module: gpio
+    pin: 30
+    default: off
+    ha_discovery:
+      component: switch
+      name: JetHub Relay 1
+
+  - name: jethub_relay_2
+    module: gpio
+    pin: 29
+    default: off
+    ha_discovery:
+      component: switch
+      name: JetHub Relay 2
+
+  - name: jethub_relay_3
+    module: gpio
+    pin: 28
+    default: off
+    ha_discovery:
+      component: switch
+      name: JetHub Relay 3
+
+  # ZigBee module control
+  - name: zigbee_boot
+    module: gpio
+    pin: 36
+    inverted: true
+    default: off
+    ha_discovery:
+      component: switch
+      name: JetHub ZigBee BOOT
+
+  - name: zigbee_reset
+    module: gpio
+    pin: 41
+    default: off
+    ha_discovery:
+      component: switch
+      name: JetHub ZigBee RESET
+
+options:
+  convention: homeassistant
+  device:
+    name: JetHub D1
+    manufacturer: JetHome
+    model: JetHub D1
