@@ -19,6 +19,7 @@ RUN case "${BUILD_ARCH}" in \
     echo "ARCH=${ARCH}" > /tmp/arch.env
 
 # Install oras (detect host architecture for cross-compilation support)
+# hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
@@ -29,6 +30,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -f "oras_1.2.2_linux_${ORAS_ARCH}.tar.gz"
 
 # Download binary from GHCR
+# hadolint ignore=DL3003
 RUN . /tmp/arch.env && \
     mkdir -p /download && \
     cd /download && \
@@ -41,6 +43,7 @@ RUN . /tmp/arch.env && \
 FROM ${BUILD_FROM}
 
 # Install runtime dependencies
+# hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libgpiod2 \
     ca-certificates \

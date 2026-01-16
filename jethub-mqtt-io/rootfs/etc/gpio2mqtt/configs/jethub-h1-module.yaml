@@ -38,7 +38,7 @@ digital_outputs:
   - name: stat_led
     module: gpio_ao
     pin: 73
-    default: off
+    default: "off"
     ha_discovery:
       component: switch
       name: JetHub H1 LED
@@ -47,7 +47,7 @@ digital_outputs:
   - name: zigbee_reset
     module: gpio
     pin: 6
-    default: off
+    default: "off"
     ha_discovery:
       component: switch
       name: JetHub H1 ZigBee RESET
@@ -55,7 +55,7 @@ digital_outputs:
   - name: zigbee_boot
     module: gpio
     pin: 9
-    default: off
+    default: "off"
     ha_discovery:
       component: switch
       name: JetHub H1 ZigBee BOOT
@@ -64,7 +64,7 @@ digital_outputs:
   - name: module2_reset
     module: gpio_ao
     pin: 89
-    default: off
+    default: "off"
     ha_discovery:
       component: switch
       name: JetHub H1 Module-2 RESET
@@ -72,7 +72,7 @@ digital_outputs:
   - name: module2_boot
     module: gpio_ao
     pin: 90
-    default: off
+    default: "off"
     ha_discovery:
       component: switch
       name: JetHub H1 Module-2 BOOT

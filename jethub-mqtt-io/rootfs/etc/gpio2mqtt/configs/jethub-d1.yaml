@@ -1,6 +1,6 @@
 ---
 # JetHub D1 Configuration for gpio2mqtt
-# Based on: https://github.com/jethome-hassio-addons/addon-jethub-mqtt-io/blob/main/jethub-mqtt-io/rootfs/etc/jethub_configs/jethub_d1_basic/mqtt-io.yaml
+# Based on original mqtt-io configuration
 #
 # JetHub D1 is an ARM-based home automation controller with:
 # - 4 digital inputs

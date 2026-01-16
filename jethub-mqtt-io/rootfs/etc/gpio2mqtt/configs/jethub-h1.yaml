@@ -32,7 +32,7 @@ digital_outputs:
   - name: stat_led
     module: gpio_ao
     pin: 73
-    default: off
+    default: "off"
     ha_discovery:
       component: switch
       name: JetHub H1 LED

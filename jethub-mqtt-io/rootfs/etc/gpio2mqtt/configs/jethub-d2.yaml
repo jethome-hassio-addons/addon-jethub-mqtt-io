@@ -76,7 +76,7 @@ digital_outputs:
     module: gpio_expander
     pin: 0
     # Default state when no MQTT retained value (on/off)
-    default: off
+    default: "off"
     ha_discovery:
       component: switch
       name: JetHub Relay 1
@@ -84,7 +84,7 @@ digital_outputs:
   - name: jethub_relay_2
     module: gpio_expander
     pin: 1
-    default: off
+    default: "off"
     ha_discovery:
       component: switch
       name: JetHub Relay 2
