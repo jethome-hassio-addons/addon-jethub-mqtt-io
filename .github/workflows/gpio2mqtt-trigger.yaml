@@ -1,0 +1,65 @@
+---
+name: gpio2mqtt Trigger
+
+# yamllint disable-line rule:truthy
+on:
+  repository_dispatch:
+    types:
+      - gpio2mqtt-build
+
+jobs:
+  process:
+    name: Process gpio2mqtt build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Log event details
+        env:
+          PAYLOAD_VERSION: ${{ github.event.client_payload.version }}
+          PAYLOAD_TAG: ${{ github.event.client_payload.tag }}
+          PAYLOAD_IS_RELEASE: ${{ github.event.client_payload.is_release }}
+          PAYLOAD_IS_PRERELEASE: ${{ github.event.client_payload.is_prerelease }}
+          PAYLOAD_SOURCE_REPO: ${{ github.event.client_payload.source_repo }}
+        run: |
+          echo "## gpio2mqtt Build Event" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Version: ${PAYLOAD_VERSION}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Tag: ${PAYLOAD_TAG}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Is Release: ${PAYLOAD_IS_RELEASE}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Is Prerelease: ${PAYLOAD_IS_PRERELEASE}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Source: ${PAYLOAD_SOURCE_REPO}" >> "$GITHUB_STEP_SUMMARY"
+
+      # Note: If both is_release and is_prerelease are true, only prerelease is created
+      # This is intentional - prereleases take precedence
+      - name: Create draft release
+        if: github.event.client_payload.is_release == true && github.event.client_payload.is_prerelease != true
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          name: "Update gpio2mqtt to ${{ github.event.client_payload.version }}"
+          tag_name: "v${{ github.event.client_payload.version }}"
+          body: |
+            ## Changes
+            - Updated gpio2mqtt binary to version ${{ github.event.client_payload.version }}
+
+            ## gpio2mqtt Release
+            - Source: https://github.com/${{ github.event.client_payload.source_repo }}
+            - Tag: ${{ github.event.client_payload.tag }}
+          prerelease: false
+
+      - name: Create draft prerelease
+        if: github.event.client_payload.is_prerelease == true
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          name: "Update gpio2mqtt to ${{ github.event.client_payload.version }} (beta)"
+          tag_name: "v${{ github.event.client_payload.version }}"
+          body: |
+            ## Changes
+            - Updated gpio2mqtt binary to version ${{ github.event.client_payload.version }}
+
+            ## gpio2mqtt Prerelease
+            - Source: https://github.com/${{ github.event.client_payload.source_repo }}
+            - Tag: ${{ github.event.client_payload.tag }}
+            - This is a beta release for testing
+          prerelease: true
