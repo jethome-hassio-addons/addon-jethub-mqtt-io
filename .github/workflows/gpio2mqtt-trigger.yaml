@@ -1,0 +1,55 @@
+---
+name: gpio2mqtt Trigger
+
+# yamllint disable-line rule:truthy
+on:
+  repository_dispatch:
+    types:
+      - gpio2mqtt-build
+
+jobs:
+  process:
+    name: Process gpio2mqtt build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log event details
+        run: |
+          echo "## gpio2mqtt Build Event" >> $GITHUB_STEP_SUMMARY
+          echo "- Version: ${{ github.event.client_payload.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Tag: ${{ github.event.client_payload.tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Is Release: ${{ github.event.client_payload.is_release }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Is Prerelease: ${{ github.event.client_payload.is_prerelease }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Source: ${{ github.event.client_payload.source_repo }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Create draft release
+        if: github.event.client_payload.is_release == true && github.event.client_payload.is_prerelease != true
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          name: "Update gpio2mqtt to ${{ github.event.client_payload.version }}"
+          tag_name: "v${{ github.event.client_payload.version }}"
+          body: |
+            ## Changes
+            - Updated gpio2mqtt binary to version ${{ github.event.client_payload.version }}
+
+            ## gpio2mqtt Release
+            - Source: https://github.com/${{ github.event.client_payload.source_repo }}
+            - Tag: ${{ github.event.client_payload.tag }}
+          prerelease: false
+
+      - name: Create draft prerelease
+        if: github.event.client_payload.is_prerelease == true
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          name: "Update gpio2mqtt to ${{ github.event.client_payload.version }} (beta)"
+          tag_name: "v${{ github.event.client_payload.version }}"
+          body: |
+            ## Changes
+            - Updated gpio2mqtt binary to version ${{ github.event.client_payload.version }}
+
+            ## gpio2mqtt Prerelease
+            - Source: https://github.com/${{ github.event.client_payload.source_repo }}
+            - Tag: ${{ github.event.client_payload.tag }}
+            - This is a beta release for testing
+          prerelease: true

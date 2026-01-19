@@ -7,7 +7,7 @@ on:
     types:
       - published
   workflow_run:
-    workflows: ["CI"]
+    workflows: ["CI", "gpio2mqtt Trigger"]
     branches: [main]
     types:
       - completed
