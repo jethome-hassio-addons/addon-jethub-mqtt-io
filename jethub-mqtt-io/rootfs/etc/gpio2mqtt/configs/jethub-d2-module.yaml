@@ -17,7 +17,9 @@ mqtt:
   port: 1883
   user: XXXXXXXXXXXX
   password: XXXXXXXXXXXX
+  client_id: jethub-mqtt-io
   topic_prefix: jethub-mqtt-io
+  legacy_mqttio: true
   # Birth/LWT messages for Home Assistant availability
   status_payload_running: available # Birth message (on connect)
   status_payload_stopped: unavailable # Graceful shutdown
