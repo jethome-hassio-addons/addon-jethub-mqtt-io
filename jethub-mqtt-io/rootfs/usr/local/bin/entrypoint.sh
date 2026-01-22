@@ -119,6 +119,7 @@ generate_config() {
     export GPIO2MQTT_MQTT_PASS="$MQTT_PASS"
     export GPIO2MQTT_MQTT_CLIENT_ID="$MQTT_CLIENT_ID"
     export GPIO2MQTT_MQTT_TOPIC_PREFIX="$MQTT_TOPIC_PREFIX"
+    export GPIO2MQTT_MQTT_LEGACY_MQTTIO="$MQTT_LEGACY_MQTTIO"
     export GPIO2MQTT_MQTT_KEEPALIVE="$MQTT_KEEPALIVE"
     export GPIO2MQTT_MQTT_QOS="$MQTT_QOS"
 
@@ -164,6 +165,7 @@ mqtt_user = os.environ.get('GPIO2MQTT_MQTT_USER', '')
 mqtt_pass = os.environ.get('GPIO2MQTT_MQTT_PASS', '')
 mqtt_client_id = os.environ.get('GPIO2MQTT_MQTT_CLIENT_ID', '')
 mqtt_topic_prefix = os.environ.get('GPIO2MQTT_MQTT_TOPIC_PREFIX', '')
+mqtt_legacy_mqttio = os.environ.get('GPIO2MQTT_MQTT_LEGACY_MQTTIO', 'true')
 mqtt_keepalive = os.environ.get('GPIO2MQTT_MQTT_KEEPALIVE', '')
 mqtt_qos = os.environ.get('GPIO2MQTT_MQTT_QOS', '')
 
@@ -202,6 +204,9 @@ try:
         config['mqtt']['keepalive'] = int(mqtt_keepalive)
     if mqtt_qos:
         config['mqtt']['qos'] = int(mqtt_qos)
+
+    # Set legacy_mqttio boolean
+    config['mqtt']['legacy_mqttio'] = mqtt_legacy_mqttio.lower() == 'true'
 
     with open(config_path, 'w') as f:
         yaml.dump(config, f, Dumper=SafeDumperPreserveStrings, default_flow_style=False, allow_unicode=True)
@@ -244,6 +249,7 @@ main() {
     CUSTOM_CONFIG=$(get_option "custom_config" "")
     MQTT_CLIENT_ID=$(get_nested_option "mqtt.client_id" "jethub-mqtt-io")
     MQTT_TOPIC_PREFIX=$(get_nested_option "mqtt.topic_prefix" "jethub-mqtt-io")
+    MQTT_LEGACY_MQTTIO=$(get_nested_option "mqtt.legacy_mqttio" "true")
 
     # Manual MQTT settings (optional)
     MANUAL_MQTT_HOST=$(get_nested_option "mqtt.host" "")

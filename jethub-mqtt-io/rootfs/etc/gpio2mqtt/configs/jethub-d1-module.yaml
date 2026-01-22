@@ -16,7 +16,6 @@ mqtt:
   password: XXXXXXXXXXXX
   client_id: jethub-mqtt-io
   topic_prefix: jethub-mqtt-io
-  legacy_mqttio: true
   # Birth/LWT messages
   status_payload_running: available
   status_payload_stopped: unavailable
