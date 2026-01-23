@@ -7,7 +7,10 @@ ARG BUILD_FROM=debian:bookworm-slim
 FROM debian:bookworm-slim AS downloader
 
 ARG BUILD_ARCH=aarch64
-ARG BINARY_VERSION=dev
+ARG BUILD_VERSION=dev
+
+# Copy versions file
+COPY gpio2mqtt-versions.json /tmp/
 
 # Map Home Assistant arch to binary arch
 # aarch64 -> arm64, amd64 -> amd64
@@ -18,22 +21,40 @@ RUN case "${BUILD_ARCH}" in \
     esac && \
     echo "ARCH=${ARCH}" > /tmp/arch.env
 
-# Install oras (detect host architecture for cross-compilation support)
+# Install oras and jq (detect host architecture for cross-compilation support)
 # hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
+    jq \
     && rm -rf /var/lib/apt/lists/* \
     && ORAS_ARCH=$(dpkg --print-architecture) \
     && curl -LO "https://github.com/oras-project/oras/releases/download/v1.2.2/oras_1.2.2_linux_${ORAS_ARCH}.tar.gz" \
     && tar -xzf "oras_1.2.2_linux_${ORAS_ARCH}.tar.gz" -C /usr/local/bin oras \
     && rm -f "oras_1.2.2_linux_${ORAS_ARCH}.tar.gz"
 
+# Determine channel based on BUILD_VERSION and get binary version from JSON
+# - Version with 'rc' or 'beta' -> beta channel
+# - Pure semver (X.Y.Z) -> stable channel
+# - Everything else (dev, SHA, etc) -> dev channel
+# hadolint ignore=SC2035
+RUN if echo "${BUILD_VERSION}" | grep -qE '(rc|beta)'; then \
+        CHANNEL="beta"; \
+    elif echo "${BUILD_VERSION}" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then \
+        CHANNEL="stable"; \
+    else \
+        CHANNEL="dev"; \
+    fi && \
+    BINARY_VERSION=$(jq -r ".${CHANNEL}" /tmp/gpio2mqtt-versions.json) && \
+    echo "Channel: ${CHANNEL}, Binary version: ${BINARY_VERSION}" && \
+    echo "BINARY_VERSION=${BINARY_VERSION}" >> /tmp/arch.env
+
 # Download binary from GHCR
 # hadolint ignore=DL3003
 RUN . /tmp/arch.env && \
     mkdir -p /download && \
     cd /download && \
+    echo "Downloading gpio2mqtt ${BINARY_VERSION} for ${ARCH}..." && \
     oras pull "ghcr.io/jethome-iot/gpio2mqtt-bin:${BINARY_VERSION}-${ARCH}" && \
     mv gpio2mqtt-linux-${ARCH} gpio2mqtt && \
     chmod +x gpio2mqtt

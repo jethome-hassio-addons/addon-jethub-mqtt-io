@@ -4,4 +4,3 @@ build_from:
   amd64: debian:bookworm-slim
 args:
   BUILD_ARCH: ${BUILD_ARCH}
-  BINARY_VERSION: dev

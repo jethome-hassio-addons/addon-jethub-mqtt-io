@@ -8,8 +8,8 @@ on:
       - gpio2mqtt-build
 
 jobs:
-  process:
-    name: Process gpio2mqtt build
+  update-versions:
+    name: Update gpio2mqtt versions
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -29,37 +29,41 @@ jobs:
           echo "- Is Prerelease: ${PAYLOAD_IS_PRERELEASE}" >> "$GITHUB_STEP_SUMMARY"
           echo "- Source: ${PAYLOAD_SOURCE_REPO}" >> "$GITHUB_STEP_SUMMARY"
 
-      # Note: If both is_release and is_prerelease are true, only prerelease is created
-      # This is intentional - prereleases take precedence
-      - name: Create draft release
-        if: github.event.client_payload.is_release == true && github.event.client_payload.is_prerelease != true
-        uses: softprops/action-gh-release@v2
-        with:
-          draft: true
-          name: "Update gpio2mqtt to ${{ github.event.client_payload.version }}"
-          tag_name: "v${{ github.event.client_payload.version }}"
-          body: |
-            ## Changes
-            - Updated gpio2mqtt binary to version ${{ github.event.client_payload.version }}
+      - name: Checkout
+        if: github.event.client_payload.is_release == true
+        uses: actions/checkout@v4
 
-            ## gpio2mqtt Release
-            - Source: https://github.com/${{ github.event.client_payload.source_repo }}
-            - Tag: ${{ github.event.client_payload.tag }}
-          prerelease: false
+      - name: Update versions file
+        if: github.event.client_payload.is_release == true
+        env:
+          VERSION: ${{ github.event.client_payload.version }}
+          IS_PRERELEASE: ${{ github.event.client_payload.is_prerelease }}
+        run: |
+          cd jethub-mqtt-io
+          if [[ "$IS_PRERELEASE" == "true" ]]; then
+            echo "Updating beta version to ${VERSION}"
+            jq --arg v "$VERSION" '.beta = $v' gpio2mqtt-versions.json > tmp.json
+            mv tmp.json gpio2mqtt-versions.json
+          else
+            echo "Updating stable and beta versions to ${VERSION}"
+            jq --arg v "$VERSION" '.stable = $v | .beta = $v' gpio2mqtt-versions.json > tmp.json
+            mv tmp.json gpio2mqtt-versions.json
+          fi
+          echo "### Updated versions:" >> "$GITHUB_STEP_SUMMARY"
+          cat gpio2mqtt-versions.json >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Create draft prerelease
-        if: github.event.client_payload.is_prerelease == true
-        uses: softprops/action-gh-release@v2
-        with:
-          draft: true
-          name: "Update gpio2mqtt to ${{ github.event.client_payload.version }} (beta)"
-          tag_name: "v${{ github.event.client_payload.version }}"
-          body: |
-            ## Changes
-            - Updated gpio2mqtt binary to version ${{ github.event.client_payload.version }}
-
-            ## gpio2mqtt Prerelease
-            - Source: https://github.com/${{ github.event.client_payload.source_repo }}
-            - Tag: ${{ github.event.client_payload.tag }}
-            - This is a beta release for testing
-          prerelease: true
+      - name: Commit and push
+        if: github.event.client_payload.is_release == true
+        env:
+          VERSION: ${{ github.event.client_payload.version }}
+          IS_PRERELEASE: ${{ github.event.client_payload.is_prerelease }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add jethub-mqtt-io/gpio2mqtt-versions.json
+          if [[ "$IS_PRERELEASE" == "true" ]]; then
+            git commit -m "chore: update gpio2mqtt beta to ${VERSION}"
+          else
+            git commit -m "chore: update gpio2mqtt to ${VERSION}"
+          fi
+          git push
