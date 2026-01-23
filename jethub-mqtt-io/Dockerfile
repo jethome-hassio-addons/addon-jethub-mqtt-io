@@ -33,30 +33,31 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && tar -xzf "oras_1.2.2_linux_${ORAS_ARCH}.tar.gz" -C /usr/local/bin oras \
     && rm -f "oras_1.2.2_linux_${ORAS_ARCH}.tar.gz"
 
-# Determine channel based on BUILD_VERSION and get binary version from JSON
-# - Version with 'rc' or 'beta' -> beta channel
-# - Pure semver (X.Y.Z) -> stable channel
-# - Everything else (dev, SHA, etc) -> dev channel
+# Determine channel based on BUILD_VERSION and get binary version
+# - Version with 'rc' or 'beta' -> beta channel (version from JSON)
+# - Pure semver (X.Y.Z) -> stable channel (version from JSON)
+# - Everything else (dev, SHA, etc) -> dev tag directly
 # hadolint ignore=SC2035
 RUN if echo "${BUILD_VERSION}" | grep -qE '(rc|beta)'; then \
         CHANNEL="beta"; \
+        BINARY_VERSION=$(jq -r ".${CHANNEL}" /tmp/gpio2mqtt-versions.json); \
     elif echo "${BUILD_VERSION}" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then \
         CHANNEL="stable"; \
+        BINARY_VERSION=$(jq -r ".${CHANNEL}" /tmp/gpio2mqtt-versions.json); \
     else \
         CHANNEL="dev"; \
+        BINARY_VERSION="dev"; \
     fi && \
-    BINARY_VERSION=$(jq -r ".${CHANNEL}" /tmp/gpio2mqtt-versions.json) && \
     echo "Channel: ${CHANNEL}, Binary version: ${BINARY_VERSION}" && \
     echo "BINARY_VERSION=${BINARY_VERSION}" >> /tmp/arch.env
 
-# Download binary from GHCR
+# Download binary from GHCR (multi-arch manifest)
 # hadolint ignore=DL3003
 RUN . /tmp/arch.env && \
     mkdir -p /download && \
     cd /download && \
-    echo "Downloading gpio2mqtt ${BINARY_VERSION} for ${ARCH}..." && \
-    oras pull "ghcr.io/jethome-iot/gpio2mqtt-bin:${BINARY_VERSION}-${ARCH}" && \
-    mv gpio2mqtt-linux-${ARCH} gpio2mqtt && \
+    echo "Downloading gpio2mqtt ${BINARY_VERSION}..." && \
+    oras pull "ghcr.io/jethome-iot/gpio2mqtt-bin:${BINARY_VERSION}" && \
     chmod +x gpio2mqtt
 
 # Stage 2: Final image
