@@ -37,7 +37,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # - Version with 'rc' or 'beta' -> beta channel (version from JSON)
 # - Pure semver (X.Y.Z) -> stable channel (version from JSON)
 # - Everything else (dev, SHA, etc) -> dev tag directly
-# hadolint ignore=SC2035
+# hadolint ignore=SC2035,DL4006
 RUN if echo "${BUILD_VERSION}" | grep -qE '(rc|beta)'; then \
         CHANNEL="beta"; \
         BINARY_VERSION=$(jq -r ".${CHANNEL}" /tmp/gpio2mqtt-versions.json); \
@@ -52,7 +52,7 @@ RUN if echo "${BUILD_VERSION}" | grep -qE '(rc|beta)'; then \
     echo "BINARY_VERSION=${BINARY_VERSION}" >> /tmp/arch.env
 
 # Download binary from GHCR (multi-arch manifest, contains both arch binaries)
-# hadolint ignore=DL3003
+# hadolint ignore=DL3003,SC1091
 RUN . /tmp/arch.env && \
     mkdir -p /download && \
     cd /download && \
