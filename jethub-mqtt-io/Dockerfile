@@ -51,13 +51,14 @@ RUN if echo "${BUILD_VERSION}" | grep -qE '(rc|beta)'; then \
     echo "Channel: ${CHANNEL}, Binary version: ${BINARY_VERSION}" && \
     echo "BINARY_VERSION=${BINARY_VERSION}" >> /tmp/arch.env
 
-# Download binary from GHCR (multi-arch manifest)
+# Download binary from GHCR (multi-arch manifest, contains both arch binaries)
 # hadolint ignore=DL3003
 RUN . /tmp/arch.env && \
     mkdir -p /download && \
     cd /download && \
     echo "Downloading gpio2mqtt ${BINARY_VERSION}..." && \
     oras pull "ghcr.io/jethome-iot/gpio2mqtt-bin:${BINARY_VERSION}" && \
+    mv "gpio2mqtt-linux-${ARCH}" gpio2mqtt && \
     chmod +x gpio2mqtt
 
 # Stage 2: Final image
