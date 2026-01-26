@@ -5,6 +5,7 @@
 # 1. Home Assistant Supervisor API (http://supervisor/info) - primary method
 # 2. Fallback: /sys/firmware/devicetree/base/model
 # 3. Fallback: /sys/firmware/devicetree/base/compatible
+# 4. Fallback: /proc/cmdline (board= parameter)
 
 set -euo pipefail
 
@@ -66,6 +67,7 @@ detect_via_supervisor_api() {
 # Detect via /sys/firmware/devicetree/base/model
 detect_via_dt_model() {
     if [[ ! -f /sys/firmware/devicetree/base/model ]]; then
+        echo "[detect-model] /sys/firmware/devicetree/base/model: file not found" >&2
         return 1
     fi
 
@@ -91,12 +93,14 @@ detect_via_dt_model() {
         return 0
     fi
 
+    echo "[detect-model] /sys/firmware/devicetree/base/model: unknown model '$dt_model'" >&2
     return 1
 }
 
 # Detect via /sys/firmware/devicetree/base/compatible
 detect_via_dt_compatible() {
     if [[ ! -f /sys/firmware/devicetree/base/compatible ]]; then
+        echo "[detect-model] /sys/firmware/devicetree/base/compatible: file not found" >&2
         return 1
     fi
 
@@ -120,6 +124,51 @@ detect_via_dt_compatible() {
         return 0
     fi
 
+    echo "[detect-model] /sys/firmware/devicetree/base/compatible: no matching JetHub entry" >&2
+    return 1
+}
+
+# Detect via /proc/cmdline (board= parameter)
+detect_via_cmdline() {
+    if [[ ! -f /proc/cmdline ]]; then
+        echo "[detect-model] /proc/cmdline: file not found" >&2
+        return 1
+    fi
+
+    local cmdline board
+    cmdline=$(cat /proc/cmdline)
+
+    # Extract board= parameter
+    if ! board=$(echo "$cmdline" | grep -oE 'board=[^ ]+' | cut -d= -f2); then
+        echo "[detect-model] /proc/cmdline: board= parameter not found" >&2
+        return 1
+    fi
+
+    if [[ -z "$board" ]]; then
+        echo "[detect-model] /proc/cmdline: board= parameter is empty" >&2
+        return 1
+    fi
+
+    local model=""
+    case "$board" in
+        "jethub-j80")
+            model="jethub-h1"
+            ;;
+        "jethub-j100")
+            model="jethub-d1"
+            ;;
+        "jethub-j200")
+            model="jethub-d2"
+            ;;
+    esac
+
+    if [[ -n "$model" ]]; then
+        echo "[detect-model] Detected via /proc/cmdline: board=$board -> $model" >&2
+        echo "$model"
+        return 0
+    fi
+
+    echo "[detect-model] /proc/cmdline: unknown board '$board'" >&2
     return 1
 }
 
@@ -144,11 +193,14 @@ detect_model() {
         return 0
     }
 
+    # Step 4: Fallback to /proc/cmdline (board= parameter)
+    model=$(detect_via_cmdline) && {
+        echo "$model"
+        return 0
+    }
+
     # Could not detect model
-    echo "[detect-model] ERROR: Could not detect JetHub model" >&2
-    echo "[detect-model] Supervisor API: SUPERVISOR_TOKEN not available or API error" >&2
-    echo "[detect-model] /sys/firmware/devicetree/base/model: not found or unknown" >&2
-    echo "[detect-model] /sys/firmware/devicetree/base/compatible: not found or unknown" >&2
+    echo "[detect-model] ERROR: Could not detect JetHub model using any method" >&2
     return 1
 }
 
