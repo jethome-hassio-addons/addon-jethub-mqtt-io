@@ -4,13 +4,17 @@
 
 ## About
 
-Expose [JetHome JetHub](http://jethome.com) resources (relays,inputs,etc..) to Home Assistant via gpio2mqtt
+Expose [JetHome JetHub](https://jethome.com) resources (relays,inputs,etc..) to Home Assistant via gpio2mqtt
 
 **Note**: _All used GPIOs will **disappear** from **/sys/class/gpio** during addon run_
 
+**Warning:** The auto-detection option works only on HAOS (Home Assistant Operating System).
+For Home Assistant Supervised, please select your device manually in the configuration.
+
+
 ## Supported devices:
 
-### [JetHome JetHub D1/D1+](http://jethome.ru/jethub-d1p) (Basic version with 3 relays, 4 inputs and 1-wire, 1 ZigBee module).
+### [JetHome JetHub D1/D1+](https://jethome.ru/d1p) (Basic version with 3 relays, 4 inputs and 1-wire, 1 ZigBee module).
 
 **Exposed peripheral:**
 
@@ -22,7 +26,7 @@ Expose [JetHome JetHub](http://jethome.com) resources (relays,inputs,etc..) to H
 **Note**: _You still need to use HACS Home Assistant [1-Wire via sysbus](https://github.com/thecode/ha-onewire-sysbus) integration to expose 1-Wire device 
 like temperature sensors `DS18B20`_
 
-### [JetHome JetHub H1](http://jethome.ru/jethub-h1) (Basic version, ZigBee module)
+### [JetHome JetHub H1](https://jethome.ru/h1) (Basic version, ZigBee module)
 
 **Exposed peripheral:**
 
@@ -74,10 +78,12 @@ If you are more interested in stable releases of our add-ons:
 - Documentation - https://docs.jethome.com
 - Official website - https://jethome.com
 - Telegram news channel - https://t.me/jethome_news
+- Telegram english news channel - https://t.me/jethome_iot_news
 - Telegram official chat - https://t.me/jethomeru
+- Telegram official english chat - https://t.me/jethome_iot
 - GitHub: https://github.com/jethome-iot
 
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2026.svg
 [project-stage-shield]: https://img.shields.io/badge/project%20stage-production%20ready-brightgreen.svg
-[release-shield]: https://img.shields.io/badge/version-{{ version }}-blue.svg
+[release-shield]: https://img.shields.io/badge/version-{{ version | replace("-", "--") }}-blue.svg
 [release]: {{ repo }}/tree/{{ version }}
