@@ -59,7 +59,13 @@ detect_via_supervisor_api() {
         echo "$machine"
         return 0
     else
-        echo "[detect-model] Machine '$machine' is not a supported JetHub model" >&2
+        # JetHome Supervised installer hardcodes MACHINE=qemuarm-64 for aarch64.
+        # That is expected on bare-metal D1/D1+; fall through to device-tree / cmdline.
+        if [[ "$machine" == "qemuarm-64" || "$machine" == "qemuarm" || "$machine" == "qemux86-64" || "$machine" == "qemux86" ]]; then
+            echo "[detect-model] Supervisor machine='$machine' is a generic Supervised id (not a JetHub board name); trying device-tree fallback" >&2
+        else
+            echo "[detect-model] Machine '$machine' is not a supported JetHub model; trying device-tree fallback" >&2
+        fi
         return 1
     fi
 }
@@ -79,7 +85,7 @@ detect_via_dt_model() {
         "JetHome JetHub J80")
             model="jethub-h1"
             ;;
-        "JetHome JetHub D1 (J100)")
+        "JetHome JetHub D1 (J100)"|"JetHome JetHub D1"|"JetHome JetHub D1+"|"JetHome JetHub D1 Plus")
             model="jethub-d1"
             ;;
         "JetHome JetHub D2")

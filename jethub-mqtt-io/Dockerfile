@@ -69,6 +69,7 @@ FROM ${BUILD_FROM}
 # hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libgpiod2 \
+    gpiod \
     ca-certificates \
     curl \
     jq \
@@ -83,7 +84,7 @@ COPY --from=downloader /download/gpio2mqtt /usr/local/bin/gpio2mqtt
 COPY rootfs /
 
 # Make scripts executable
-RUN chmod +x /usr/local/bin/*.sh
+RUN chmod +x /usr/local/bin/*.sh /usr/local/bin/*.py
 
 # Set working directory
 WORKDIR /data

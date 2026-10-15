@@ -13,6 +13,7 @@ arch:
   - amd64
 homeassistant: "2024.1.0"
 gpio: true
+devicetree: true
 apparmor: false
 
 options:

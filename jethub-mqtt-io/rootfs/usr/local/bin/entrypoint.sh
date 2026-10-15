@@ -8,7 +8,9 @@
 # 3. Get MQTT settings (auto-discover or manual)
 # 4. Generate final config
 # 5. Run gpio-unexport.py
-# 6. Start gpio2mqtt
+# 6. Wait until MQTT broker accepts TCP connections
+# 7. Publish retained digital-input states (workaround for unknown after reboot)
+# 8. Start gpio2mqtt + HA-birth re-publish helper
 
 set -euo pipefail
 
@@ -90,6 +92,53 @@ discover_mqtt() {
     fi
 
     log_info "Discovered MQTT: host=$MQTT_HOST, port=$MQTT_PORT, user=$MQTT_USER"
+}
+
+# Wait until MQTT broker accepts TCP connections (mqtt:need != TCP ready)
+wait_for_mqtt() {
+    local host="$1"
+    local port="$2"
+    local timeout="${3:-120}"
+    local start now elapsed
+
+    log_info "Waiting for MQTT broker at ${host}:${port} (timeout ${timeout}s)..."
+    start=$(date +%s)
+    while true; do
+        if (echo >"/dev/tcp/${host}/${port}") >/dev/null 2>&1; then
+            log_info "MQTT broker is accepting connections"
+            return 0
+        fi
+        now=$(date +%s)
+        elapsed=$((now - start))
+        if [[ "$elapsed" -ge "$timeout" ]]; then
+            log_error "Timed out waiting for MQTT broker ${host}:${port}"
+            return 1
+        fi
+        sleep 1
+    done
+}
+
+publish_initial_input_states() {
+    local config_file="$1"
+    if [[ ! -x /usr/local/bin/publish-input-states.py && ! -f /usr/local/bin/publish-input-states.py ]]; then
+        log_info "publish-input-states.py not found, skipping initial input publish"
+        return 0
+    fi
+    log_info "Publishing retained digital-input states before gpio2mqtt..."
+    python3 /usr/local/bin/publish-input-states.py --config "$config_file" --mode once || {
+        log_error "Initial input-state publish failed (continuing anyway)"
+        return 0
+    }
+}
+
+start_input_state_helper() {
+    local config_file="$1"
+    if [[ ! -f /usr/local/bin/publish-input-states.py ]]; then
+        return 0
+    fi
+    log_info "Starting HA-birth input-state helper..."
+    python3 /usr/local/bin/publish-input-states.py --config "$config_file" --mode watch &
+    INPUT_STATE_HELPER_PID=$!
 }
 
 # Generate final configuration
@@ -335,6 +384,16 @@ main() {
     # Run GPIO unexport
     run_gpio_unexport "$GENERATED_CONFIG"
 
+    # Ensure broker is reachable before gpio2mqtt publishes discovery/initial states
+    MQTT_PORT="${MQTT_PORT:-1883}"
+    wait_for_mqtt "$MQTT_HOST" "$MQTT_PORT" 120 || {
+        log_error "MQTT broker not reachable; refusing to start gpio2mqtt yet"
+        exit 1
+    }
+
+    # Publish retained input states while GPIO lines are still free
+    publish_initial_input_states "$GENERATED_CONFIG"
+
     # Start gpio2mqtt
     log_info "Starting gpio2mqtt..."
 
@@ -360,8 +419,31 @@ main() {
             ;;
     esac
 
-    # Execute gpio2mqtt (replace this process)
-    exec /usr/local/bin/gpio2mqtt --config "$GENERATED_CONFIG"
+    INPUT_STATE_HELPER_PID=""
+    start_input_state_helper "$GENERATED_CONFIG"
+
+    # Run gpio2mqtt as PID1 child so the birth helper can stay alive
+    /usr/local/bin/gpio2mqtt --config "$GENERATED_CONFIG" &
+    GPIO2MQTT_PID=$!
+
+    cleanup() {
+        log_info "Shutting down..."
+        if [[ -n "${INPUT_STATE_HELPER_PID}" ]] && kill -0 "$INPUT_STATE_HELPER_PID" 2>/dev/null; then
+            kill "$INPUT_STATE_HELPER_PID" 2>/dev/null || true
+        fi
+        if kill -0 "$GPIO2MQTT_PID" 2>/dev/null; then
+            kill "$GPIO2MQTT_PID" 2>/dev/null || true
+            wait "$GPIO2MQTT_PID" 2>/dev/null || true
+        fi
+        if [[ -n "${INPUT_STATE_HELPER_PID}" ]]; then
+            wait "$INPUT_STATE_HELPER_PID" 2>/dev/null || true
+        fi
+    }
+    trap cleanup EXIT INT TERM
+
+    wait "$GPIO2MQTT_PID"
+    exit_code=$?
+    exit "$exit_code"
 }
 
 # Run main
