@@ -7,8 +7,10 @@
 # 2. Detect JetHub model (if auto)
 # 3. Get MQTT settings (auto-discover or manual)
 # 4. Generate final config
-# 5. Run gpio-unexport.py
-# 6. Start gpio2mqtt
+# 5. Apply power_on_state to digital_outputs (restore/off/on)
+# 6. Run gpio-unexport.py
+# 7. Wait until MQTT broker accepts TCP connections
+# 8. Start gpio2mqtt
 
 set -euo pipefail
 
@@ -90,6 +92,99 @@ discover_mqtt() {
     fi
 
     log_info "Discovered MQTT: host=$MQTT_HOST, port=$MQTT_PORT, user=$MQTT_USER"
+}
+
+# Wait until MQTT broker accepts TCP connections.
+# gpio2mqtt restores outputs from retained MQTT state during startup; if it
+# starts before the broker accepts connections, restore falls back to YAML
+# defaults (relays off) — see issue #50 / cold-start race in #49.
+wait_for_mqtt() {
+    local host="$1"
+    local port="$2"
+    local timeout="${3:-120}"
+    local start now elapsed
+
+    log_info "Waiting for MQTT broker at ${host}:${port} (timeout ${timeout}s)..."
+    start=$(date +%s)
+    while true; do
+        if (echo >"/dev/tcp/${host}/${port}") >/dev/null 2>&1; then
+            log_info "MQTT broker is accepting connections"
+            return 0
+        fi
+        now=$(date +%s)
+        elapsed=$((now - start))
+        if [[ "$elapsed" -ge "$timeout" ]]; then
+            log_error "Timed out waiting for MQTT broker ${host}:${port}"
+            return 1
+        fi
+        sleep 1
+    done
+}
+
+# Apply power_on_state to every digital_outputs entry in the generated YAML.
+# restore -> restore_state: true (MQTT retained; YAML default is fallback)
+# off/on  -> restore_state: false + default forced
+apply_power_on_state() {
+    local config_file="$1"
+    local mode="$2"
+
+    log_info "Applying power_on_state=${mode} to digital_outputs..."
+    POWER_ON_STATE="$mode" GPIO2MQTT_CONFIG_PATH="$config_file" python3 <<'PYTHON_EOF'
+import os
+import sys
+import yaml
+
+class SafeLoaderNoYAML11Bool(yaml.SafeLoader):
+    pass
+
+for ch in list('OoYyNn'):
+    if ch in SafeLoaderNoYAML11Bool.yaml_implicit_resolvers:
+        SafeLoaderNoYAML11Bool.yaml_implicit_resolvers[ch] = [
+            (tag, regexp) for tag, regexp in SafeLoaderNoYAML11Bool.yaml_implicit_resolvers[ch]
+            if tag != 'tag:yaml.org,2002:bool'
+        ]
+
+class SafeDumperPreserveStrings(yaml.SafeDumper):
+    pass
+
+YAML_BOOL_STRINGS = {'true', 'false', 'yes', 'no', 'on', 'off', 'y', 'n'}
+
+def str_representer(dumper, value):
+    if value.lower() in YAML_BOOL_STRINGS:
+        return dumper.represent_scalar('tag:yaml.org,2002:str', value, style="'")
+    return dumper.represent_scalar('tag:yaml.org,2002:str', value)
+
+SafeDumperPreserveStrings.add_representer(str, str_representer)
+
+path = os.environ['GPIO2MQTT_CONFIG_PATH']
+mode = os.environ.get('POWER_ON_STATE', 'restore').strip().lower()
+if mode not in ('restore', 'off', 'on'):
+    print(f"[ERROR] Invalid power_on_state: {mode}", file=sys.stderr)
+    sys.exit(1)
+
+with open(path, 'r', encoding='utf-8') as fh:
+    config = yaml.load(fh, Loader=SafeLoaderNoYAML11Bool) or {}
+
+outputs = config.get('digital_outputs') or []
+if not isinstance(outputs, list):
+    print("[ERROR] digital_outputs must be a list", file=sys.stderr)
+    sys.exit(1)
+
+for out in outputs:
+    if not isinstance(out, dict):
+        continue
+    if mode == 'restore':
+        out['restore_state'] = True
+    else:
+        out['restore_state'] = False
+        out['default'] = mode
+
+config['digital_outputs'] = outputs
+with open(path, 'w', encoding='utf-8') as fh:
+    yaml.dump(config, fh, Dumper=SafeDumperPreserveStrings, default_flow_style=False, allow_unicode=True)
+
+print(f"[INFO] power_on_state={mode} applied to {len(outputs)} digital_outputs")
+PYTHON_EOF
 }
 
 # Generate final configuration
@@ -246,6 +341,7 @@ main() {
     LOG_LEVEL=$(get_option "log_level" "info")
     JETHUB_MODEL=$(get_option "jethub_model" "auto")
     USE_MODULE_CONFIG=$(get_option "use_module_config" "false")
+    POWER_ON_STATE=$(get_option "power_on_state" "restore")
     CUSTOM_CONFIG=$(get_option "custom_config" "")
     MQTT_CLIENT_ID=$(get_nested_option "mqtt.client_id" "jethub-mqtt-io")
     MQTT_TOPIC_PREFIX=$(get_nested_option "mqtt.topic_prefix" "jethub-mqtt-io")
@@ -261,7 +357,7 @@ main() {
     MQTT_KEEPALIVE=$(get_nested_option "mqtt.keepalive" "60")
     MQTT_QOS=$(get_nested_option "mqtt.qos" "1")
 
-    log_info "Options: model=$JETHUB_MODEL, use_module=$USE_MODULE_CONFIG, log_level=$LOG_LEVEL"
+    log_info "Options: model=$JETHUB_MODEL, use_module=$USE_MODULE_CONFIG, power_on_state=$POWER_ON_STATE, log_level=$LOG_LEVEL"
 
     # Check for whitespace-only custom config (used in multiple places)
     local trimmed_custom_config
@@ -332,8 +428,18 @@ main() {
     # Generate final config
     generate_config "$BASE_CONFIG" "$GENERATED_CONFIG"
 
+    # Power-on behaviour for digital outputs (issue #50)
+    apply_power_on_state "$GENERATED_CONFIG" "$POWER_ON_STATE"
+
     # Run GPIO unexport
     run_gpio_unexport "$GENERATED_CONFIG"
+
+    # Broker must accept connections before gpio2mqtt tries retained restore
+    MQTT_PORT="${MQTT_PORT:-1883}"
+    wait_for_mqtt "$MQTT_HOST" "$MQTT_PORT" 120 || {
+        log_error "MQTT broker not reachable; refusing to start gpio2mqtt yet"
+        exit 1
+    }
 
     # Start gpio2mqtt
     log_info "Starting gpio2mqtt..."

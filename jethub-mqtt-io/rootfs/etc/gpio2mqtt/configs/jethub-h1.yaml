@@ -33,6 +33,7 @@ digital_outputs:
   - name: stat_led
     module: gpio_ao
     pin: 73
+    restore_state: true
     default: "off"
     ha_discovery:
       component: switch

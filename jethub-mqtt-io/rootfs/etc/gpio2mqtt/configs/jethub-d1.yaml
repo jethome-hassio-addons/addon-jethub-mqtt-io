@@ -78,6 +78,7 @@ digital_outputs:
     module: gpio
     pin: 26
     inverted: true
+    restore_state: true
     default: "off"
     ha_discovery:
       component: switch
@@ -87,6 +88,7 @@ digital_outputs:
     module: gpio
     pin: 27
     inverted: true
+    restore_state: true
     default: "on"
     ha_discovery:
       component: switch
@@ -96,6 +98,7 @@ digital_outputs:
   - name: jethub_relay_1
     module: gpio
     pin: 30
+    restore_state: true
     default: "off"
     ha_discovery:
       component: switch
@@ -104,6 +107,7 @@ digital_outputs:
   - name: jethub_relay_2
     module: gpio
     pin: 29
+    restore_state: true
     default: "off"
     ha_discovery:
       component: switch
@@ -112,6 +116,7 @@ digital_outputs:
   - name: jethub_relay_3
     module: gpio
     pin: 28
+    restore_state: true
     default: "off"
     ha_discovery:
       component: switch

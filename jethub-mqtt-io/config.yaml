@@ -19,6 +19,10 @@ options:
   log_level: info
   jethub_model: auto
   use_module_config: false
+  # After power loss / reboot: restore last MQTT-retained relay state,
+  # or force all digital outputs off/on. Fallback when nothing retained
+  # is still each output's YAML `default`.
+  power_on_state: restore
   custom_config: ""
   mqtt:
     client_id: jethub-mqtt-io
@@ -31,6 +35,7 @@ schema:
   log_level: list(trace|debug|info|warning|error)
   jethub_model: list(auto|jethub-d1|jethub-d2|jethub-h1|manual)
   use_module_config: bool
+  power_on_state: list(restore|off|on)
   custom_config: str?
   mqtt:
     host: str?

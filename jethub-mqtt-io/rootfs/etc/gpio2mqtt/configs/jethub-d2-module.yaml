@@ -78,6 +78,7 @@ digital_outputs:
   - name: jethub_relay_1
     module: gpio_expander
     pin: 0
+    restore_state: true
     default: "off"
     ha_discovery:
       component: switch
@@ -86,6 +87,7 @@ digital_outputs:
   - name: jethub_relay_2
     module: gpio_expander
     pin: 1
+    restore_state: true
     default: "off"
     ha_discovery:
       component: switch
@@ -95,6 +97,7 @@ digital_outputs:
   - name: uxm1_reset
     module: gpio_expander
     pin: 4
+    restore_state: true
     default: "off"
     ha_discovery:
       component: switch
@@ -103,6 +106,7 @@ digital_outputs:
   - name: uxm1_boot
     module: gpio_expander
     pin: 5
+    restore_state: true
     default: "off"
     ha_discovery:
       component: switch
@@ -112,6 +116,7 @@ digital_outputs:
   - name: uxm2_reset
     module: gpio_expander
     pin: 6
+    restore_state: true
     default: "off"
     ha_discovery:
       component: switch
@@ -120,6 +125,7 @@ digital_outputs:
   - name: uxm2_boot
     module: gpio_expander
     pin: 7
+    restore_state: true
     default: "off"
     ha_discovery:
       component: switch

@@ -80,6 +80,24 @@ for ZigBee/UXM module control (BOOT, RESET pins).
 
 **Default**: `false`
 
+### Option: `power_on_state`
+
+What to do with digital outputs (relays, status LEDs) after power loss or
+addon/controller reboot.
+
+**Values**:
+
+- `restore` — restore last state from MQTT retained messages (gpio2mqtt
+  `restore_state: true`). If nothing is retained yet, YAML `default` is used
+  (relays usually `off`, green status LED usually `on`).
+- `off` — force all digital outputs off (`restore_state: false`).
+- `on` — force all digital outputs on (`restore_state: false`).
+
+**Default**: `restore`
+
+Note: restore needs a reachable MQTT broker at startup. The addon waits for
+the broker to accept connections before starting gpio2mqtt.
+
 ### Option: `custom_config`
 
 Optional custom gpio2mqtt YAML configuration. If provided, this will be used
