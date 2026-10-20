@@ -31,7 +31,7 @@ jobs:
 
       - name: Checkout
         if: github.event.client_payload.is_release == true
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Update versions file
         if: github.event.client_payload.is_release == true
