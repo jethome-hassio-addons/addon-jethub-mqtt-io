@@ -1,0 +1,29 @@
+---
+name: Retag 0.3.1
+
+# One-off: re-publish the existing 0.3.0 image as 0.3.1 without rebuilding
+# (the pinned 2023 build environment no longer resolves on current Alpine
+# repositories). The resulting image is byte-identical to 0.3.0 — only the
+# deprecation texts differ in the add-on repository, not in this image.
+"on":
+  push:
+    branches: [release/0.3.1]
+
+permissions:
+  packages: write
+
+jobs:
+  retag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Retag aarch64 0.3.0 to 0.3.1
+        run: |
+          docker buildx imagetools create \
+            -t ghcr.io/jethome-hassio-addons/jethub-mqtt-io/aarch64:0.3.1 \
+            ghcr.io/jethome-hassio-addons/jethub-mqtt-io/aarch64:0.3.0
