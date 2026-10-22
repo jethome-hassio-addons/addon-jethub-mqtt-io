@@ -2,7 +2,7 @@
 name: JetHome JetHub mqtt-io peripheral exposer
 version: dev
 slug: jethub-mqtt-io
-description: Expose JetHome JetHub peripheral (relays, inputs, etc..) via mqtt-io
+description: DEPRECATED - replaced by JetHome peripheral exposer. Expose JetHome JetHub peripheral via mqtt-io
 url: https://github.com/jethome-hassio-addons/addon-jethub-mqtt-io
 init: false # https://developers.home-assistant.io/blog/2022/05/12/s6-overlay-base-images/
 services:

@@ -2,6 +2,14 @@
 
 # Home Assistant Add-on: JetHome JetHub peripheral exposer
 
+## ⚠️ DEPRECATED
+
+This add-on is replaced by
+[JetHome peripheral exposer](https://github.com/jethome-hassio-addons/addon-jethub-gpio2mqtt)
+and will not receive any further development. Install the new add-on, stop and
+disable this one, then start the new one. See the new add-on's documentation
+for the migration notes.
+
 ## About
 
 Expose [JetHub](http://jethome.ru) resources (relays,inputs,etc..) to

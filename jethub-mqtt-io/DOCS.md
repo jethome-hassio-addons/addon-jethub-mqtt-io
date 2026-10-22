@@ -3,6 +3,14 @@
 Expose [JetHome JetHub](http://jethome.ru) resources (relays,inputs,etc..) to
 Home Assistant via [mqtt-io](https://github.com/flyte/mqtt-io)
 
+> **⚠️ DEPRECATED — this add-on is replaced by
+> [JetHome peripheral exposer](https://github.com/jethome-hassio-addons/addon-jethub-gpio2mqtt).**
+> It will not receive any further development. To migrate: install the new
+> add-on, stop and disable this one, then start the new one — entities will be
+> re-created under a JetHub device. See the new add-on's documentation for
+> details, including a `legacy_mqttio` compatibility switch for the old
+> entity IDs.
+
 ## Configuration
 
 **Note**: _Remember to restart the add-on when the configuration is changed._
